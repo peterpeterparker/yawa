@@ -65,7 +65,7 @@
       },
     },
     "packages/tracker": {
-      "name": "yawa",
+      "name": "yawa-tracker",
       "version": "0.0.1",
       "dependencies": {
         "web-vitals": "^5.3.0",
@@ -377,8 +377,6 @@
 
     "wrappy": ["wrappy@1.0.2", "", {}, "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="],
 
-    "yawa": ["yawa@workspace:packages/tracker"],
-
     "yawa-app": ["yawa-app@workspace:packages/app"],
 
     "yawa-cli": ["yawa-cli@workspace:packages/cli"],
@@ -388,6 +386,8 @@
     "yawa-db": ["yawa-db@workspace:packages/db"],
 
     "yawa-schema": ["yawa-schema@workspace:packages/schema"],
+
+    "yawa-tracker": ["yawa-tracker@workspace:packages/tracker"],
 
     "zod": ["zod@4.4.3", "", {}, "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="],
 

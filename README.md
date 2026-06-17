@@ -113,13 +113,13 @@ What are my top pages this week?
 Install the tracker in your website or frontend app:
 
 ```bash
-npm install yawa
+npm install yawa-tracker
 ```
 
 ### Setup
 
 ```ts
-import { initYawa } from "yawa";
+import { initYawa } from "yawa-tracker";
 
 const cleanup = initYawa({
   serverUrl: "https://your-yawa-server.com",
@@ -133,7 +133,7 @@ This automatically tracks page views on load and navigation (SPA-friendly via `h
 To track a custom event, call `trackEvent` with a name and optional metadata:
 
 ```ts
-import { trackEvent } from "yawa";
+import { trackEvent } from "yawa-tracker";
 
 trackEvent({ name: "signup", metadata: { plan: "pro" } });
 ```
@@ -145,7 +145,7 @@ Keys and values must be strings, with a maximum of 10 keys and 200 characters pe
 Core Web Vitals (CLS, FCP, INP, LCP, TTFB) can also be collected by enabling the option when initializing the tracker:
 
 ```ts
-import { initYawa } from "yawa";
+import { initYawa } from "yawa-tracker";
 
 const cleanup = initYawa({
   serverUrl: "https://your-yawa-server.com",
