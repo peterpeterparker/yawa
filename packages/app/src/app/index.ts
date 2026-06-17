@@ -12,6 +12,7 @@ import { assertAuthMiddleware } from "../middlewares/auth";
 import { defineMcp } from "./_mcp";
 import { defineCreateTrackEvent } from "./_track-events";
 import { defineCreatePerformanceMetric } from "./_performance-metrics";
+import { defineHealth } from "./_health.ts";
 
 export const defineApp: DefineApi = ({ db }) => {
   const app = new Hono();
@@ -47,6 +48,8 @@ export const defineApp: DefineApi = ({ db }) => {
   );
 
   app.all("/mcp", defineMcp);
+
+  app.get("/health", defineHealth);
 
   return {
     fetch: app.fetch,
