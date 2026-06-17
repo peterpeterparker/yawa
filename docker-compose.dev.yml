@@ -1,0 +1,16 @@
+# Development only. Uses locally built image.
+# Build first: docker buildx build . --file Dockerfile --progress=plain --no-cache --platform=linux/arm64 -t yawa
+services:
+  app:
+    image: yawa
+    platform: linux/arm64
+    ports:
+      - "3000:3000"
+    volumes:
+      - yawa-data:/data
+    environment:
+      - YAWA_SESSION_SECRET=${YAWA_SESSION_SECRET}
+    restart: unless-stopped
+
+volumes:
+  yawa-data:
