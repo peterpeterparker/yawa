@@ -8,7 +8,7 @@ const DEV_MIGRATIONS_DIR = join(import.meta.dir, "..", "migrations");
 const DEV_BOOTSTRAP_DIR = join(import.meta.dir, "..", "bootstrap");
 const DEV_SYSTEM_SQL = join(DEV_BOOTSTRAP_DIR, "system.sql");
 
-const PROD_DATA_DIR = join(process.cwd(), "data");
+const PROD_DATA_DIR = "/data";
 const PROD_MIGRATIONS_DIR = join(process.cwd(), "migrations");
 const PROD_BOOTSTRAP_DIR = join(process.cwd(), "bootstrap");
 const PROD_SYSTEM_SQL = join(PROD_BOOTSTRAP_DIR, "system.sql");
