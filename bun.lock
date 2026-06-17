@@ -35,7 +35,6 @@
     },
     "packages/cli": {
       "name": "yawa-cli",
-      "version": "0.0.1",
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
@@ -43,14 +42,12 @@
     },
     "packages/common": {
       "name": "yawa-common",
-      "version": "0.0.1",
       "dependencies": {
         "zod": "^4.4.3",
       },
     },
     "packages/db": {
       "name": "yawa-db",
-      "version": "0.0.1",
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
@@ -59,7 +56,6 @@
     },
     "packages/schema": {
       "name": "yawa-schema",
-      "version": "0.0.1",
       "dependencies": {
         "zod": "^4.4.3",
       },
