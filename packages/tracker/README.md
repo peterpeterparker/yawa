@@ -1,9 +1,9 @@
 [![npm][npm-badge]][npm-badge-url]
 [![license][npm-license]][npm-license-url]
 
-[npm-badge]: https://img.shields.io/npm/v/yawa
-[npm-badge-url]: https://www.npmjs.com/package/yawa
-[npm-license]: https://img.shields.io/npm/l/yawa
+[npm-badge]: https://img.shields.io/npm/v/yawa-tracker
+[npm-badge-url]: https://www.npmjs.com/package/yawa-tracker
+[npm-license]: https://img.shields.io/npm/l/yawa-tracker
 [npm-license-url]: https://github.com/peterpeterparker/yawa/blob/main/packages/tracker/LICENSE
 
 # yawa - Tracker
