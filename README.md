@@ -28,6 +28,8 @@ Lastly, connect your **MCP client** (Claude Code/Desktop/Web, Codex, or any MCP-
 
 Run the server on any VPS or locally if you just want to give it a spin.
 
+1. Create a `docker-compose.yml`
+
 ```yaml
 services:
   app:
@@ -43,6 +45,16 @@ services:
 volumes:
   yawa-data:
 ```
+
+2. Generate a secret
+
+Optional, but improves visitor counting accuracy when generating the session IDs.
+
+```bash
+echo "YAWA_SESSION_SECRET=$(openssl rand -base64 32)" > .env
+```
+
+3. Start the server
 
 ```bash
 docker compose up -d
