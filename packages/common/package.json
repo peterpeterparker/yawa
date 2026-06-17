@@ -1,0 +1,16 @@
+{
+  "name": "yawa-common",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "module": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
+}

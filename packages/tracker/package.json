@@ -1,0 +1,38 @@
+{
+  "name": "yawa",
+  "version": "0.0.1",
+  "description": "Tracking library for yet another web analytics.",
+  "bugs": {
+    "url": "https://github.com/peterpeterparker/yawa"
+  },
+  "license": "MIT",
+  "author": "David Dal Busco (https://daviddalbusco.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterpeterparker/yawa.git",
+    "directory": "packages/tracker"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development bun run ./src/index.ts",
+    "build:ts-declaration": "tsc --emitDeclarationOnly --outDir dist",
+    "build:lib": "NODE_ENV=production bun build --minify --target=browser --sourcemap=linked --splitting --outdir=dist ./src/index.ts",
+    "build": "bun run build:lib && bun run build:ts-declaration",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "web-vitals": "^5.3.0"
+  }
+}

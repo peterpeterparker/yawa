@@ -1,0 +1,16 @@
+{
+  "name": "yawa-cli",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "module": "src/index.ts",
+  "scripts": {
+    "dev": "NODE_ENV=development bun run ./src/index.ts",
+    "build": "NODE_ENV=production bun build --compile --minify-whitespace --minify-syntax --target bun --outfile ./build/cli ./src/index.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "yawa-common": "workspace:*",
+    "yawa-schema": "workspace:*"
+  }
+}

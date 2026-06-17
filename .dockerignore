@@ -1,0 +1,4 @@
+.yawa
+**/node_modules
+**/dist
+**/build

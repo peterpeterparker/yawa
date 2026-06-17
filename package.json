@@ -1,0 +1,29 @@
+{
+  "name": "yawa-monorepo",
+  "private": true,
+  "license": "MIT",
+  "author": "David Dal Busco",
+  "workspaces": [
+    "packages/common",
+    "packages/app",
+    "packages/db",
+    "packages/schema",
+    "packages/cli",
+    "packages/tracker"
+  ],
+  "scripts": {
+    "lint": "bunx oxlint",
+    "lint:fix": "bunx oxlint --fix",
+    "fmt": "bunx oxfmt",
+    "fmt:check": "bunx oxfmt --check"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "^1.5.3-r.3"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
+    "typescript": "^6.0.3"
+  }
+}

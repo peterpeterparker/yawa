@@ -1,0 +1,27 @@
+{
+  "name": "yawa-app",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "module": "src/index.ts",
+  "scripts": {
+    "dev": "NODE_ENV=development bun run ./src/index.ts",
+    "build": "NODE_ENV=production bun run ./build.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@hono/mcp": "^0.3.0",
+    "@hono/zod-validator": "^0.8.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "hono": "^4.12.25",
+    "ipaddr.js": "^2.4.0",
+    "ua-parser-js": "1.0.41",
+    "yawa-common": "workspace:*",
+    "yawa-db": "workspace:*",
+    "yawa-schema": "workspace:*",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/ua-parser-js": "^0.7.39"
+  }
+}

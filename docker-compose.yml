@@ -1,0 +1,15 @@
+services:
+  app:
+    image: yawa
+    platform: linux/arm64
+    ports:
+      - "3000:3000"
+    volumes:
+      - yawa-data:/data
+    environment:
+      - YAWA_SESSION_SECRET=test
+      - YAWA_DATA_DIR=/data
+    restart: unless-stopped
+
+volumes:
+  yawa-data:
