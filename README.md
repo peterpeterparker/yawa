@@ -134,9 +134,9 @@ npm install yawa-tracker
 ### Setup
 
 ```ts
-import { initYawa } from "yawa-tracker";
+import { init } from "yawa-tracker";
 
-const cleanup = initYawa({
+const cleanup = init({
   serverUrl: "https://your-yawa-server.com",
 });
 ```
@@ -160,9 +160,9 @@ Keys and values must be strings, with a maximum of 10 keys and 200 characters pe
 Core Web Vitals (CLS, FCP, INP, LCP, TTFB) can also be collected by enabling the option when initializing the tracker:
 
 ```ts
-import { initYawa } from "yawa-tracker";
+import { init } from "yawa-tracker";
 
-const cleanup = initYawa({
+const cleanup = init({
   serverUrl: "https://your-yawa-server.com",
   webVitals: true,
 });
@@ -172,7 +172,7 @@ const cleanup = initYawa({
 
 | Function                | Description                                         |
 | ----------------------- | --------------------------------------------------- |
-| `initYawa(options)`     | Initialize the tracker. Returns a cleanup function. |
+| `init(options)`         | Initialize the tracker. Returns a cleanup function. |
 | `trackPageView()`       | Fire-and-forget page view tracking.                 |
 | `trackPageViewAsync()`  | Async page view tracking.                           |
 | `trackEvent(data)`      | Fire-and-forget custom event.                       |

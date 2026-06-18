@@ -15,11 +15,11 @@ export { trackEvent, trackEventAsync, trackPageView, trackPageViewAsync } from "
  * @returns A cleanup function to stop tracking and remove all listeners.
  *
  * @example
- * const cleanup = initYawa({ serverUrl: "https://analytics.example.com" });
+ * const cleanup = init({ serverUrl: "https://analytics.example.com" });
  * // Later, to stop tracking:
  * cleanup();
  */
-export const initYawa = (env: Environment): (() => void) => {
+export const init = (env: Environment): (() => void) => {
   const { cleanup: analyticsServicesCleanup } = initServices(env);
 
   // Save first page as soon as possible.
