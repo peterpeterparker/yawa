@@ -5,7 +5,21 @@ export type * from "./types/env";
 export type * from "./types/track";
 export { trackEvent, trackEventAsync, trackPageView, trackPageViewAsync } from "./_tracker";
 
-export const initAnalytics = (env: Environment): (() => void) => {
+/**
+ * Initializes the yawa analytics tracker.
+ *
+ * Tracks the first page view immediately, listens for navigation changes (SPA-friendly),
+ * and optionally collects Web Vitals.
+ *
+ * @param env - Configuration options including the server URL and optional features.
+ * @returns A cleanup function to stop tracking and remove all listeners.
+ *
+ * @example
+ * const cleanup = init({ serverUrl: "https://analytics.example.com" });
+ * // Later, to stop tracking:
+ * cleanup();
+ */
+export const init = (env: Environment): (() => void) => {
   const { cleanup: analyticsServicesCleanup } = initServices(env);
 
   // Save first page as soon as possible.
