@@ -5,14 +5,34 @@
 
 yawa is a self-hosted web analytics platform with no UI. Instead of dashboards, you query your data through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io), asking Claude or any compatible AI client questions about your traffic in plain language.
 
-```
-"List my analytics sites"
-"What are my top pages this week?"
-"Show me web vitals for my homepage."
-"Which UTM campaigns are driving the most visitors?"
-```
+It requires no cookie banners or GDPR consent. Its tracking script is also super tiny.
 
-It, obviously, requires no cookie banners or GDPR consent. Its tracking script is also super tiny.
+```
+❯ list my analytics sites
+
+You have one registered site:
+
+┌──────────────────────────────────────┬────────────────┬────────┐
+│                  ID                  │    Hostname    │ Status │
+├──────────────────────────────────────┼────────────────┼────────┤
+│ 019ed922-33e5-7b9e-a072-963680861c6f │ yourdomain.com │ active │
+└──────────────────────────────────────┴────────────────┴────────┘
+
+❯ What are my top pages this week?
+
+Top pages this week (Jun 15–18):
+
+┌───────────────────┬──────────┬───────────┐
+│       Page        │ Visitors │ Pageviews │
+├───────────────────┼──────────┼───────────┤
+│ / (homepage)      │ 312      │ 489       │
+│ /blog             │ 201      │ 334       │
+│ /about            │ 98       │ 121       │
+│ /blog/hello-world │ 87       │ 103       │
+└───────────────────┴──────────┴───────────┘
+
+Your homepage leads, with the blog close behind.
+```
 
 ## Motivation
 
@@ -128,8 +148,10 @@ Once connected, start by listing your sites:
 
 ```
 List my analytics sites
-Show me stats for yourdomain.com for the last 30 days
 What are my top pages this week?
+Show me web vitals for my homepage.
+Which UTM campaigns are driving the most visitors?
+etc.
 ```
 
 ## Install the tracker
