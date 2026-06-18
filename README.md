@@ -145,12 +145,12 @@ This automatically tracks page views on load and navigation (SPA-friendly via `h
 
 ### Custom events
 
-To track a custom event, call `trackEvent` with a name and optional metadata:
+To track a custom event, call `track` with a name and optional metadata:
 
 ```ts
-import { trackEvent } from "yawa-tracker";
+import { track } from "yawa-tracker";
 
-trackEvent({ name: "signup", metadata: { plan: "pro" } });
+track({ name: "signup", metadata: { plan: "pro" } });
 ```
 
 Keys and values must be strings, with a maximum of 10 keys and 200 characters per key/value.
@@ -170,13 +170,13 @@ const cleanup = init({
 
 ### API
 
-| Function                | Description                                         |
-| ----------------------- | --------------------------------------------------- |
-| `init(options)`         | Initialize the tracker. Returns a cleanup function. |
-| `trackPageView()`       | Fire-and-forget page view tracking.                 |
-| `trackPageViewAsync()`  | Async page view tracking.                           |
-| `trackEvent(data)`      | Fire-and-forget custom event.                       |
-| `trackEventAsync(data)` | Async custom event.                                 |
+| Function           | Description                                         |
+| ------------------ | --------------------------------------------------- |
+| `init(options)`    | Initialize the tracker. Returns a cleanup function. |
+| `track(data)`      | Fire-and-forget custom event.                       |
+| `trackAsync(data)` | Async custom event.                                 |
+| `visit()`          | Fire-and-forget page view tracking.                 |
+| `visitAsync()`     | Async page view tracking.                           |
 
 ### Options
 

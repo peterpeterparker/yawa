@@ -30,7 +30,7 @@ export const initServices = (env: Environment): { cleanup: () => void } => {
 };
 
 export const initTrackPageViews = (): { cleanup: () => void } => {
-  const trackPages = async () => await trackPageViewAsync();
+  const trackPages = async () => await visitAsync();
 
   let pushStateProxy: typeof history.pushState | null = new Proxy(history.pushState, {
     // eslint-disable-next-line local-rules/prefer-object-params
@@ -104,41 +104,34 @@ export const startTrackPerformance = async () => {
 };
 
 /**
- * Tracks a page view.
- *
- * This function does not return a promise, as it triggers the tracking request without awaiting its completion.
- * It is designed for fire-and-forget usage to avoid blocking application flow.
+ * Tracks a page view (fire-and-forget).
  */
-export const trackPageView = () => {
-  trackPageViewAsync();
+export const visit = () => {
+  visitAsync();
 };
 
 /**
  * Tracks a page view.
- * @returns {Promise<void>} A promise that resolves when the page view is tracked.
+ * @returns A promise that resolves when the page view has been tracked.
  */
-export const trackPageViewAsync = async (): Promise<void> => {
+export const visitAsync = async (): Promise<void> => {
   await setPageView();
 };
 
 /**
- * Tracks a custom event.
- *
- * This function does not return a promise, as it triggers the tracking request without awaiting its completion.
- * It is designed for fire-and-forget usage to avoid blocking application flow.
- *
- * @param {TrackEvent} data - The event details.
+ * Tracks a custom event (fire-and-forget).
+ * @param data - The event to track.
  */
-export const trackEvent = (data: TrackEvent) => {
-  trackEventAsync(data);
+export const track = (data: TrackEvent) => {
+  trackAsync(data);
 };
 
 /**
  * Tracks a custom event.
- * @param {TrackEvent} data - The event details.
- * @returns {Promise<void>} A promise that resolves when the event is tracked.
+ * @param data - The event to track.
+ * @returns A promise that resolves when the event has been tracked.
  */
-export const trackEventAsync = async (data: TrackEvent): Promise<void> => {
+export const trackAsync = async (data: TrackEvent): Promise<void> => {
   if (!isBrowser()) {
     return;
   }
