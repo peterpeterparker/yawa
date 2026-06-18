@@ -14,6 +14,15 @@ yawa is a self-hosted web analytics platform with no UI. Instead of dashboards, 
 
 It, obviously, requires no cookie banners or GDPR consent. Its tracking script is also super tiny.
 
+## Motivation
+
+yawa grew out of my experience building [Juno](https://github.com/junobuild/juno), for which I had already implemented a custom privacy-friendly analytics solution. When it was deprecated, I needed to move my projects. Since I already had the logic and some reusable code, I thought: why not build yet another web analytics, again 😅.
+
+I also find it interesting to skip the dashboard entirely and rely solely on an MCP server for querying data.
+
+> [!NOTE]
+> I do not plan to implement features such as user journeys or funnels as I do not have those requirements myself. Other solutions handle that well. Feel free to contribute or [hire me](https://daviddalbusco.com) if needed.
+
 ## How it works
 
 Yet another web analytics has three moving parts.
