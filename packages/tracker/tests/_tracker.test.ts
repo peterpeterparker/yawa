@@ -1,5 +1,5 @@
 import { describe, test, expect, afterEach, beforeEach, spyOn } from "bun:test";
-import { initServices, setPageView, trackEventAsync, startTrackPerformance } from "../src/_tracker";
+import { initServices, setPageView, trackAsync, startTrackPerformance } from "../src/_tracker";
 import { EventsService } from "../src/services/events.service";
 import { PerformanceService } from "../src/services/performance.service";
 
@@ -103,11 +103,11 @@ describe("tracker", () => {
     });
   });
 
-  describe("trackEventAsync", () => {
+  describe("trackAsync", () => {
     test("calls events.setTrackEvent", async () => {
       initServices({ serverUrl: "https://analytics.example.com" });
 
-      await trackEventAsync({ name: "button_click", metadata: { plan: "pro" } });
+      await trackAsync({ name: "button_click", metadata: { plan: "pro" } });
 
       expect(EventsService.prototype.setTrackEvent).toHaveBeenCalledWith(
         expect.objectContaining({ name: "button_click", metadata: { plan: "pro" } }),
@@ -119,7 +119,7 @@ describe("tracker", () => {
       // @ts-ignore
       globalThis.window = undefined;
 
-      await trackEventAsync({ name: "button_click" });
+      await trackAsync({ name: "button_click" });
       expect(EventsService.prototype.setTrackEvent).not.toHaveBeenCalled();
     });
   });

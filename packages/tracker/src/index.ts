@@ -3,7 +3,7 @@ import { initServices, initTrackPageViews, setPageView, startTrackPerformance } 
 
 export type * from "./types/env";
 export type * from "./types/track";
-export { trackEvent, trackEventAsync, trackPageView, trackPageViewAsync } from "./_tracker";
+export { track, trackAsync, visit, visitAsync } from "./_tracker";
 
 /**
  * Initializes the yawa analytics tracker.
