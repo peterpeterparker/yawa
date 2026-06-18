@@ -22,7 +22,7 @@ Your **app or website** sends analytics with a lightweight JavaScript library (`
 
 On **your self-hosted server**, you deploy a Docker container that exposes an API and MCP server. It receives the events and stores them in an embedded [DuckDB](https://duckdb.org) database, and provides 26+ analytics tools over the Model Context Protocol.
 
-Lastly, connect your **MCP client** (Claude Code/Desktop/Web, Codex, or any MCP-compatible client) to your endpoint and query your data in natural language.
+Lastly, connect your **MCP client** (Claude Code/Desktop, Codex, or any MCP-compatible client) to your endpoint and query your data in natural language.
 
 ## Quick Start
 
@@ -91,6 +91,9 @@ claude mcp add yawa https://your-server.com/mcp --transport http \
   --header "Authorization: Bearer YOUR_TOKEN"
 ```
 
+> [!TIP]
+> Add `--scope user` to make it available across all your projects.
+
 ### Cursor
 
 Add to your `mcp.json`:
@@ -110,7 +113,7 @@ Add to your `mcp.json`:
 
 ### Claude (web)
 
-Go to Settings -> Integrations -> Add MCP server and enter your server URL and Bearer token.
+Claude web currently requires OAuth for MCP connections. Bearer token support is not yet available. Follow [this issue](https://github.com/anthropics/claude-ai-mcp/issues/10), which aims to add support for custom HTTP headers, for updates.
 
 Once connected, start by listing your sites:
 
