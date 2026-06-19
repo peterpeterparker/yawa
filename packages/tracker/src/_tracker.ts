@@ -64,6 +64,7 @@ export const setPageView = async () => {
   const {
     title,
     location: { href },
+    referrer,
   } = document;
   const { innerWidth, innerHeight, screen: windowScreen } = window;
   const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
@@ -72,6 +73,7 @@ export const setPageView = async () => {
 
   await services?.events?.setPageView({
     href,
+    ...(referrer !== undefined && referrer !== "" && { referrer }),
     time_zone: timeZone,
     title,
     device: {

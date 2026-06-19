@@ -101,6 +101,30 @@ describe("tracker", () => {
         }),
       );
     });
+
+    test("includes referrer when document.referrer is set", async () => {
+      // @ts-ignore
+      globalThis.document.referrer = "https://twitter.com";
+      initServices({ serverUrl: "https://analytics.example.com" });
+
+      await setPageView();
+
+      expect(EventsService.prototype.setPageView).toHaveBeenCalledWith(
+        expect.objectContaining({ referrer: "https://twitter.com" }),
+      );
+    });
+
+    test("omits referrer when document.referrer is empty", async () => {
+      // @ts-ignore
+      globalThis.document.referrer = "";
+      initServices({ serverUrl: "https://analytics.example.com" });
+
+      await setPageView();
+
+      expect(EventsService.prototype.setPageView).toHaveBeenCalledWith(
+        expect.not.objectContaining({ referrer: expect.anything() }),
+      );
+    });
   });
 
   describe("trackAsync", () => {
