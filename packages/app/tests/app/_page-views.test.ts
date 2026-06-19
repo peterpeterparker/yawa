@@ -111,7 +111,7 @@ describe("defineCreatePageView", () => {
     expect(rows.result[0]?.href).toBe("https://example.com/page");
   });
 
-  test("extracts referrer from Referer header", async () => {
+  test("extracts referrer from request body", async () => {
     const app = makeApp(instance, siteId);
     const connectionResult = await instance.connect();
     if (connectionResult.status === "error") throw new Error();
@@ -121,9 +121,8 @@ describe("defineCreatePageView", () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Referer: "https://twitter.com",
       },
-      body: JSON.stringify(validBody),
+      body: JSON.stringify({ ...validBody, referrer: "https://twitter.com" }),
     });
 
     const rows = await connection.query({

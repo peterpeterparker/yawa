@@ -19,7 +19,14 @@ export const defineCreatePageView: DefineHandler<
     },
   } = context;
 
-  const { visit_id, title, href: rawHref, time_zone, device } = req.valid("json");
+  const {
+    visit_id,
+    title,
+    href: rawHref,
+    time_zone,
+    referrer: rawReferrer,
+    device,
+  } = req.valid("json");
 
   const url = URL.parse(rawHref);
 
@@ -32,7 +39,7 @@ export const defineCreatePageView: DefineHandler<
     return notEmptyString(value) ? value : null;
   };
 
-  const referrer = readHeader("Referer");
+  const referrer = notEmptyString(rawReferrer) ? rawReferrer : null;
 
   const user_agent = readHeader("User-Agent");
   const client = await parseUserAgent({ user_agent });
