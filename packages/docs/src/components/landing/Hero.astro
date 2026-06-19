@@ -1,0 +1,309 @@
+---
+import Logo from "./Logo.astro";
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { title = data.title, tagline, actions = [] } = data.hero || {};
+---
+
+<div class="terminal">
+    <div class="terminal-welcome">
+        <div class="terminal-welcome-label">yawa</div>
+        <div class="terminal-welcome-body">
+            <div class="terminal-welcome-left">
+                <h1 class="terminal-welcome-title" data-page-title set:html={title} />
+                <Logo />
+                {tagline && <p class="terminal-welcome-tagline" set:html={tagline} />}
+            </div>
+            <div class="terminal-welcome-divider"></div>
+            <div class="terminal-welcome-right">
+                <p class="terminal-welcome-section">Tips for getting started</p>
+                <p class="terminal-welcome-line">Run /docs to access the documentation.</p>
+                <div class="terminal-welcome-sep"></div>
+                <p class="terminal-welcome-section">What's new</p>
+                <p class="terminal-welcome-line">26+ MCP analytics tools.</p>
+                <p class="terminal-welcome-line">Privacy-friendly, no cookie banners.</p>
+                <p class="terminal-welcome-line">Self-hosted.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="terminal-body">
+        <span class="terminal-prompt">❯</span>
+        <span class="terminal-cmd">list my analytics sites</span>
+
+        <p class="terminal-action">Called your-analytics</p>
+
+        <span class="terminal-bullet">•</span>
+
+        <div class="terminal-response">
+            <p>You have one registered site:</p>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Hostname</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>019ed922-33e5-7b9e-a072-963680861c6f</td>
+                    <td>yourdomain.com</td>
+                    <td>active</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <span class="terminal-prompt">❯</span>
+        <span class="terminal-cmd">what are my top pages this week?</span>
+
+        <p class="terminal-action">Called your-analytics</p>
+
+        <span class="terminal-bullet">•</span>
+
+        <div class="terminal-response">
+            <p>Here are your top 10 pages for this week (Jun 15–19):</p>
+            <table>
+                <thead>
+                <tr>
+                    <th>Page</th>
+                    <th>Visitors</th>
+                    <th>Pageviews</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>/ (homepage)</td><td>312</td><td>489</td></tr>
+                <tr><td>/about</td><td>98</td><td>121</td></tr>
+                <tr><td>/blog/hello-world</td><td>87</td><td>103</td></tr>
+                </tbody>
+            </table>
+            <p>Your homepage is clearly the standout this week, with the blog close behind.</p>
+        </div>
+    </div>
+
+    <div class="terminal-footer">
+        <span class="terminal-prompt">❯</span>
+
+        <div class="terminal-input-wrapper">
+            <input class="terminal-input" type="text" placeholder=" " />
+        </div>
+
+        <span class="terminal-shortcuts">? for shortcuts</span>
+    </div>
+</div>
+
+<style>
+    .terminal {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.875rem;
+        padding: var(--sl-nav-pad-y) 0;
+    }
+
+    .terminal-welcome {
+        margin: 1rem 2rem;
+        border: 1px solid var(--sl-color-orange);
+        border-radius: 4px;
+        position: relative;
+    }
+
+    .terminal-welcome-label {
+        position: absolute;
+        top: -0.75rem;
+        left: 0.75rem;
+        background: var(--sl-color-bg-nav);
+        padding: 0 0.4rem;
+        color: var(--sl-color-orange);
+        font-size: 0.8rem;
+    }
+
+    .terminal-welcome-body {
+        display: flex;
+        gap: 0;
+        padding: 1rem;
+    }
+
+    .terminal-welcome-left {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        text-align: center;
+        padding-right: 1rem;
+    }
+
+    .terminal-welcome-title {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
+        font-weight: 600;
+        color: var(--sl-color-white);
+        margin: 0;
+    }
+
+    .terminal-welcome-tagline {
+        color: var(--sl-color-blue);
+        font-size: 0.75rem;
+        margin: 0;
+        text-align: left;
+    }
+
+    .terminal-welcome-divider {
+        width: 1px;
+        background: var(--sl-color-orange-low);
+        margin: 0 1rem;
+        align-self: stretch;
+    }
+
+    .terminal-welcome-right {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .terminal-welcome-section {
+        color: var(--sl-color-orange);
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .terminal-welcome-line {
+        margin: 0;
+        font-size: 0.82rem;
+    }
+
+    .terminal-welcome-sep {
+        height: 1px;
+        background: var(--sl-color-orange-low);
+        margin: 0.75rem 0;
+    }
+
+    .terminal-body, .terminal-footer {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 0.25rem;
+        row-gap: .35rem;
+    }
+
+    .terminal-body {
+        padding: 0.5rem 2rem;
+    }
+
+    .terminal-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0;
+    }
+
+    .terminal-prompt {
+        color: var(--sl-color-purple);
+    }
+
+    .terminal-bullet {
+        color: var(--sl-color-white);
+    }
+
+    .terminal-cmd {
+        color: var(--sl-color-white);
+    }
+
+    .terminal-action {
+        grid-column: 2/3;
+        color: var(--sl-color-gray-3);
+        font-size: 0.75rem;
+    }
+
+    :root[data-theme="light"] {
+        .terminal-action {
+            color: var(--sl-color-gray-4);
+        }
+    }
+
+    .terminal-response {
+        grid-column: 2/3;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0 0 1rem;
+    }
+
+    .terminal-response p {
+        margin: 0;
+        color: var(--sl-color-white);
+    }
+
+    .terminal-response table {
+        border-collapse: collapse;
+    }
+
+    .terminal-response th,
+    .terminal-response td {
+        border: 1px solid var(--sl-color-hairline-shade);
+        padding: 0.3rem 0.75rem;
+        text-align: left;
+    }
+
+    .terminal-response th {
+        color: var(--sl-color-white);
+        background: var(--sl-color-gray-6);
+    }
+
+    .terminal-footer {
+        border-top: 1px solid var(--sl-color-gray-5);;
+    }
+
+    .terminal-footer .terminal-prompt {
+        padding: 0.25rem 0 0 2rem;
+    }
+
+    .terminal-footer .terminal-input-wrapper {
+        padding: 0.225rem 2rem 0 0;
+    }
+
+    .terminal-shortcuts {
+        grid-column: 1/3;
+        display: flex;
+        justify-content: flex-start;
+        padding: 0.4rem 2rem;
+        background: var(--sl-color-gray-6);
+        color: var(--sl-color-gray-3);
+        font-size: 0.75rem;
+        border-top: 1px solid var(--sl-color-gray-5);
+    }
+
+    .terminal-input-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .terminal-input {
+        background: transparent;
+        appearance: none;
+        border: none;
+        outline: none;
+        color: var(--sl-color-white);
+        font-family: inherit;
+        font-size: inherit;
+        width: 100%;
+    }
+
+    .terminal-input-wrapper:has(input:not(:focus):placeholder-shown)::after {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 8px;
+        height: 1em;
+        background: var(--sl-color-purple);
+        animation: blink 1s step-end infinite;
+        vertical-align: text-bottom;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+</style>

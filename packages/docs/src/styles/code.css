@@ -1,0 +1,18 @@
+div.expressive-code figure {
+  border: 1px solid var(--sl-color-hairline-shade);
+  background: #21222c;
+  box-shadow: none;
+}
+
+div.expressive-code figure > figcaption,
+div.expressive-code figure > pre {
+  background: inherit;
+}
+
+div.expressive-code figure > figcaption:has(> span.title:empty)::before {
+  background: #6272a4;
+}
+
+div.expressive-code figure > figcaption:has(> span.title:not(.empty))::before {
+  border-bottom: 1px solid var(--sl-color-hairline-shade);
+}
