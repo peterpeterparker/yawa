@@ -1,0 +1,36 @@
+{
+  "name": "yawa-docs",
+  "version": "0.0.1",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/peterpeterparker/yawa"
+  },
+  "license": "MIT",
+  "author": "David Dal Busco (https://daviddalbusco.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterpeterparker/yawa.git",
+    "directory": "packages/docs"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build && bun run build:compress",
+    "build:compress": "bun build.compress.ts",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.39.2",
+    "@fontsource-variable/nunito-sans": "^5.2.7",
+    "astro": "^6.4.2",
+    "mime-types": "^3.0.2",
+    "remark-gfm": "^4.0.1",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^3.0.1",
+    "kyushu-types": "^0.0.3"
+  }
+}

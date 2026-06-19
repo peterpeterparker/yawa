@@ -1,0 +1,8 @@
+header.header a.site-title img {
+  height: 1.5rem;
+}
+
+:root[data-has-hero] div.page > header.header > div.header,
+:root[data-has-sidebar] header {
+  background: var(--sl-color-gray-6);
+}

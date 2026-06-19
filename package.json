@@ -9,7 +9,8 @@
     "packages/db",
     "packages/schema",
     "packages/cli",
-    "packages/tracker"
+    "packages/tracker",
+    "packages/docs"
   ],
   "scripts": {
     "lint": "bunx oxlint",

@@ -1,0 +1,124 @@
+---
+title: Getting Started
+description: Deploy yawa and connect your first MCP client.
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+Yet Another Web Analytics (yawa) is a self-hosted web analytics platform with no UI. This guide walks you through deploying the server, registering your first site, and connecting an MCP client.
+
+:::caution
+yawa is in early development. APIs, configuration, and data formats may change without notice. Use in production at your own risk.
+:::
+
+## Quick start
+
+Run the server on any VPS or locally if you just want to give it a spin.
+
+<Steps>
+
+1.  **Create a `docker-compose.yml`**
+
+    ```yaml
+    services:
+      app:
+        image: peterpeterparker/yawa:latest
+        ports:
+          - "3000:3000"
+        volumes:
+          - yawa-data:/data
+        environment:
+          - YAWA_SESSION_SECRET=${YAWA_SESSION_SECRET}
+        restart: unless-stopped
+
+    volumes:
+      yawa-data:
+    ```
+
+2.  **Generate a secret**
+
+    Optional, but improves visitor counting accuracy.
+
+    ```bash
+    echo "YAWA_SESSION_SECRET=$(openssl rand -base64 32)" > .env
+    ```
+
+3.  **Start the server**
+
+    ```bash
+    docker compose up -d
+    ```
+
+4.  **Create an access token**
+
+    ```bash
+    docker exec -it <container-name> ./cli token create --name mytoken
+    ```
+
+    Copy the token. It will only be shown once.
+
+5.  **Register your site**
+
+    ```bash
+    docker exec -it <container-name> ./cli site create --hostname yourdomain.com
+    ```
+
+6.  **Install the tracker**
+
+    Install the tracker in your website or frontend app:
+
+    ```bash
+    npm install yawa-tracker
+    ```
+
+    Then initialize it:
+
+    ```ts
+    import { init } from "yawa-tracker";
+
+    const cleanup = init({
+      serverUrl: "https://your-yawa-server.com",
+    });
+    ```
+
+    Deploy or run your site and generate few page views.
+
+7.  **Connect your MCP client**
+
+        Connect for example Claude Code using the token created above:
+
+        ```bash
+        claude mcp add yawa https://your-server.com/mcp --transport http \
+            --header "Authorization: Bearer YOUR_TOKEN"
+        ```
+
+        Then start asking questions :)
+
+        ```
+        ❯ list my analytics sites
+
+        You have one registered site:
+
+        ┌──────────────────────────────────────┬────────────────┬────────┐
+        │                  ID                  │    Hostname    │ Status │
+        ├──────────────────────────────────────┼────────────────┼────────┤
+        │ 019ed922-33e5-7b9e-a072-963680861c6f │ yourdomain.com │ active │
+        └──────────────────────────────────────┴────────────────┴────────┘
+
+        ❯ what are my top pages this week?
+
+        Top pages this week (Jun 15–18):
+
+        ┌───────────────────┬──────────┬───────────┐
+        │       Page        │ Visitors │ Pageviews │
+        ├───────────────────┼──────────┼───────────┤
+        │ / (homepage)      │ 312      │ 489       │
+        │ /blog             │ 201      │ 334       │
+        │ /about            │ 98       │ 121       │
+        │ /blog/hello-world │ 87       │ 103       │
+        └───────────────────┴──────────┴───────────┘
+
+        Your homepage leads, with the blog close behind.
+        ```
+
+</Steps>
