@@ -1,3 +1,3 @@
 ```shell
-yarn add kyushu-types -D
+yarn add yawa-tracker
 ```

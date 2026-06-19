@@ -1,3 +1,3 @@
 ```shell
-npm install kyushu-types -D
+npm install yawa-tracker
 ```

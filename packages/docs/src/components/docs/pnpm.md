@@ -1,3 +1,3 @@
 ```shell
-pnpm add kyushu-types -D
+pnpm add yawa-tracker
 ```
