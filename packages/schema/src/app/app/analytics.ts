@@ -13,6 +13,7 @@ export const CreatePageViewRequestSchema = z.strictObject({
   title: AnalyticsSchema.PageViewSchema.shape.title,
   href: AnalyticsSchema.PageViewSchema.shape.href,
   time_zone: AnalyticsSchema.PageViewSchema.shape.time_zone,
+  referrer: AnalyticsSchema.PageViewSchema.shape.referrer.unwrap().optional(),
   device: DeviceSchema,
 });
 
