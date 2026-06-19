@@ -17,6 +17,7 @@ export interface SetPageViewRequest extends SetRequest {
   title: string;
   href: string;
   time_zone: string;
+  referrer?: string;
   device: SetPageViewDeviceRequest;
 }
 
