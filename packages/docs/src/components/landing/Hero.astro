@@ -2,10 +2,124 @@
 import Logo from "./Logo.astro";
 
 const { data } = Astro.locals.starlightRoute.entry;
-const { title = data.title, tagline, actions = [] } = data.hero || {};
+const { title = data.title, tagline } = data.hero || {};
 ---
 
+<script>
+    import { navigate } from 'astro:transitions/client';
+
+    const render = ({nodes}: {nodes: NodeList}) => {
+        const body = document.querySelector("div.terminal-body");
+
+        // TS guard unlikely
+        if (body === null) {
+            return;
+        }
+
+        const observer = new MutationObserver(
+            () => {
+                body.scroll({ top: body.scrollHeight, behavior: 'smooth' });
+                observer.disconnect();
+            }
+        );
+
+        observer.observe(body, {childList: true, subtree: true});
+
+        const chat = body.querySelector('.terminal-chat');
+        chat?.append(...nodes);
+    }
+
+    const renderPrompt = ({prompt}: {prompt: string}) => {
+        const htmlPrompt = `<span class="terminal-prompt">❯</span>
+
+        <span class="terminal-cmd">${prompt}</span>`
+
+        const divPrompt = document.createElement('div');
+        divPrompt.innerHTML = htmlPrompt;
+
+        render({nodes: divPrompt.childNodes});
+    }
+
+    const renderResponse = ({htmlResponse}: {htmlResponse: string}) => {
+        const divResponse = document.createElement('div');
+        divResponse.innerHTML = htmlResponse;
+
+        render({nodes: divResponse.childNodes});
+    }
+
+    const renderItsATrap = (args: {prompt: string}) => {
+        renderPrompt(args);
+
+        const htmlResponse = `<span class="terminal-bullet">•</span>
+
+        <div class="terminal-response">
+            <p>LOL, you really thought this was a live chat? 😂</p>
+            <p>Head over to <a href="/getting-started">/docs</a> to learn how to install yawa and use your MCP client.</p>
+</div>`;
+
+        renderResponse({htmlResponse});
+    }
+
+    const renderHelp = (args: {prompt: string}) => {
+        renderPrompt(args);
+
+        const htmlResponse = `<span class="terminal-bullet">•</span>
+
+        <div class="terminal-response">
+            <p>Available commands:</p>
+            
+            <ul>
+            <li>/docs - go to documentation</li>
+            <li>/github - go to GitHub</li>
+            </ul>
+</div>`;
+
+        renderResponse({htmlResponse});
+    }
+
+    const oninput = async ($event: Event) => {
+        if (!("key" in $event) || $event.key !== "Enter") {
+            return;
+        }
+
+        const input = document.querySelector<HTMLInputElement>("input.terminal-input");
+
+        // TS guard unlikely
+        if (input === null) {
+            return;
+        }
+
+        const prompt = input?.value?.trim();
+
+        switch (prompt) {
+            case "/docs":
+                await navigate('/getting-started');
+                break;
+            case "/github":
+                window.location.href = "https://github.com/peterpeterparker/yawa";
+                break;
+            case "?":
+            case "help":
+            case "/help":
+                renderHelp({prompt});
+                break;
+            default:
+                renderItsATrap({prompt});
+        }
+
+        input.value = "";
+    }
+
+    const onmount = () => {
+        const input = document.querySelector("input.terminal-input");
+        input?.addEventListener("keydown", oninput, {passive: true});
+    }
+
+    document.addEventListener("DOMContentLoaded", onmount);
+</script>
+
 <div class="terminal">
+    <div class="terminal-body">
     <div class="terminal-welcome">
         <div class="terminal-welcome-label">yawa</div>
         <div class="terminal-welcome-body">
@@ -27,35 +141,9 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
         </div>
     </div>
 
-    <div class="terminal-body">
+    <div class="terminal-chat">
         <span class="terminal-prompt">❯</span>
-        <span class="terminal-cmd">list my analytics sites</span>
 
-        <p class="terminal-action">Called your-analytics</p>
-
-        <span class="terminal-bullet">•</span>
-
-        <div class="terminal-response">
-            <p>You have one registered site:</p>
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Hostname</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>019ed922-33e5-7b9e-a072-963680861c6f</td>
-                    <td>yourdomain.com</td>
-                    <td>active</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <span class="terminal-prompt">❯</span>
         <span class="terminal-cmd">what are my top pages this week?</span>
 
         <p class="terminal-action">Called your-analytics</p>
@@ -74,6 +162,7 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
                 </thead>
                 <tbody>
                 <tr><td>/ (homepage)</td><td>312</td><td>489</td></tr>
+                <tr><td>/blog</td><td>201</td><td>334</td></tr>
                 <tr><td>/about</td><td>98</td><td>121</td></tr>
                 <tr><td>/blog/hello-world</td><td>87</td><td>103</td></tr>
                 </tbody>
@@ -81,12 +170,13 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
             <p>Your homepage is clearly the standout this week, with the blog close behind.</p>
         </div>
     </div>
+    </div>
 
     <div class="terminal-footer">
         <span class="terminal-prompt">❯</span>
 
         <div class="terminal-input-wrapper">
-            <input class="terminal-input" type="text" placeholder=" " />
+            <input class="terminal-input" autofocus type="text" placeholder=" " />
         </div>
 
         <span class="terminal-shortcuts">? for shortcuts</span>
@@ -98,6 +188,22 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.875rem;
         padding: var(--sl-nav-pad-y) 0;
+    }
+
+    .terminal-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        max-height: 590px;
+        overflow-y: auto;
+    }
+
+    .terminal-chat {
+        flex: 1;
+    }
+
+    .terminal-chat > .hidden {
+        display: none;
     }
 
     .terminal-welcome {
@@ -180,33 +286,26 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
         margin: 0.75rem 0;
     }
 
-    .terminal-body, .terminal-footer {
+    .terminal-chat, .terminal-footer {
         display: grid;
         grid-template-columns: auto 1fr;
         column-gap: 0.25rem;
         row-gap: .35rem;
     }
 
-    .terminal-body {
+    .terminal-chat {
         padding: 0.5rem 2rem;
     }
 
-    .terminal-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.25rem 0;
-    }
-
-    .terminal-prompt {
+    :global(.terminal-prompt) {
         color: var(--sl-color-purple);
     }
 
-    .terminal-bullet {
+    :global(.terminal-bullet) {
         color: var(--sl-color-white);
     }
 
-    .terminal-cmd {
+    :global(.terminal-cmd) {
         color: var(--sl-color-white);
     }
 
@@ -222,7 +321,7 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
         }
     }
 
-    .terminal-response {
+    :global(.terminal-response) {
         grid-column: 2/3;
         display: flex;
         flex-direction: column;
@@ -230,9 +329,15 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
         padding: 0 0 1rem;
     }
 
-    .terminal-response p {
+    :global(.terminal-response p) {
         margin: 0;
         color: var(--sl-color-white);
+    }
+
+    :global(.terminal-response ul) {
+        padding: 0;
+        list-style-type: none;
+        margin: 0 0 0 -1px;
     }
 
     .terminal-response table {
@@ -252,7 +357,7 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
     }
 
     .terminal-footer {
-        border-top: 1px solid var(--sl-color-gray-5);;
+        border-top: 1px solid var(--sl-color-gray-5);
     }
 
     .terminal-footer .terminal-prompt {
@@ -289,21 +394,7 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
         font-family: inherit;
         font-size: inherit;
         width: 100%;
+        caret-color: var(--sl-color-purple);
     }
 
-    .terminal-input-wrapper:has(input:not(:focus):placeholder-shown)::after {
-        content: '';
-        position: absolute;
-        display: inline-block;
-        width: 8px;
-        height: 1em;
-        background: var(--sl-color-purple);
-        animation: blink 1s step-end infinite;
-        vertical-align: text-bottom;
-    }
-
-    @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
-    }
 </style>
