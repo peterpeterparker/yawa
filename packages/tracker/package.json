@@ -29,7 +29,9 @@
     "dev": "NODE_ENV=development bun run ./src/index.ts",
     "build:ts-declaration": "tsc --emitDeclarationOnly --outDir dist",
     "build:lib": "NODE_ENV=production bun build --minify --target=browser --sourcemap=linked --splitting --outdir=dist ./src/index.ts",
+    "build:compress": "bun ../../build.compress.ts",
     "build": "bun run build:lib && bun run build:ts-declaration",
+    "build:app": "bun run build:lib && bun run build:ts-declaration && bun run build:compress",
     "test": "bun test"
   },
   "dependencies": {
