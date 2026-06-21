@@ -13,6 +13,7 @@ COPY packages/db/package.json /temp/dev/packages/db/
 COPY packages/schema/package.json /temp/dev/packages/schema/
 COPY packages/cli/package.json /temp/dev/packages/cli/
 COPY packages/tracker/package.json /temp/dev/packages/tracker/
+COPY packages/docs/package.json /temp/dev/packages/docs/
 RUN cd /temp/dev && bun install --frozen-lockfile
 
 # install with --production (exclude devDependencies)
@@ -24,6 +25,7 @@ COPY packages/db/package.json /temp/prod/packages/db/
 COPY packages/schema/package.json /temp/prod/packages/schema/
 COPY packages/cli/package.json /temp/prod/packages/cli/
 COPY packages/tracker/package.json /temp/prod/packages/tracker/
+COPY packages/docs/package.json /temp/prod/packages/docs/
 RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 # copy node_modules from temp directory
