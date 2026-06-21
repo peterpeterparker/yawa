@@ -170,13 +170,23 @@ Add to your `mcp.json`:
 
 ## Install the tracker
 
-Install the tracker in your website or frontend app:
+There are two ways to add the tracker to your site.
+
+### Script tag
+
+Add this to your site's `<head>`:
+
+```html
+<script type="module" src="https://your-yawa-server.com/static/yawa.js"></script>
+```
+
+The script derives the server URL from where it was loaded, so no further configuration is needed. It automatically tracks page views on load and navigation. Web Vitals collection is not available with this method; use the npm package below if you need that.
+
+### npm
 
 ```bash
 npm install yawa-tracker
 ```
-
-### Setup
 
 ```ts
 import { init } from "yawa-tracker";
@@ -201,6 +211,9 @@ track({ name: "signup", metadata: { plan: "pro" } });
 Keys and values must be strings, with a maximum of 10 keys and 200 characters per key/value.
 
 ### Web Vitals
+
+> [!NOTE]
+> Available with the npm package only.
 
 Core Web Vitals (CLS, FCP, INP, LCP, TTFB) can also be collected by enabling the option when initializing the tracker:
 
