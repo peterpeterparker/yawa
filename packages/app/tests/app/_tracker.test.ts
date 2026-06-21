@@ -12,6 +12,7 @@ describe("defineTracker", () => {
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toBe("application/javascript; charset=utf-8");
     expect(res.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(res.headers.get("Cache-Control")).toBe("public, max-age=604800");
 
     const body = await res.text();
     expect(body).toBe(
