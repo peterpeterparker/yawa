@@ -17,7 +17,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build && bun run build:compress",
-    "build:compress": "bun build.compress.ts",
+    "build:compress": "bun ../../build.compress.ts",
     "preview": "astro preview",
     "astro": "astro"
   },

@@ -59,7 +59,7 @@ RUN bun test
 ENV NODE_ENV=production
 RUN bun run --filter yawa-app build
 RUN bun run --filter yawa-cli build
-RUN bun run --filter yawa-tracker build
+RUN bun run --filter yawa-tracker build:app
 
 # build final image
 FROM base AS release
