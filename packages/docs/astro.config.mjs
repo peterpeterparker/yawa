@@ -41,18 +41,16 @@ export default defineConfig({
             content: "https://yetanotherwebanalytics.dev/social-image.jpg",
           },
         },
-        ...(import.meta.env.PROD
-          ? [
-              {
-                tag: "script",
-                attrs: { type: "module" },
-                content: `
-            import { init } from 'https://cdn.jsdelivr.net/npm/yawa-tracker@0.0.4/+esm';
-            init({ serverUrl: 'https://analytics.fluster.io' });
-          `,
-              },
-            ]
-          : []),
+        {
+          tag: "script",
+          attrs: {
+            type: "module",
+            async: true,
+            src: import.meta.env.PROD
+              ? "https://analytics.fluster.io/tracker"
+              : "http://localhost:3000/tracker",
+          },
+        },
       ],
       logo: {
         light: "./src/assets/logo-light.svg",
