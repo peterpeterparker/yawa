@@ -13,6 +13,9 @@ import { defineMcp } from "./_mcp";
 import { defineCreateTrackEvent } from "./_track-events";
 import { defineCreatePerformanceMetric } from "./_performance-metrics";
 import { defineHealth } from "./_health.ts";
+import { defineTracker } from "./_tracker";
+import { serveStatic } from "hono/bun";
+import { join } from "node:path";
 
 export const defineApp: DefineApi = ({ db }) => {
   const app = new Hono();
@@ -25,6 +28,13 @@ export const defineApp: DefineApi = ({ db }) => {
       allowMethods: ["POST"],
     }),
   );
+  app.use(
+    "/tracker/*",
+    cors({
+      allowMethods: ["GET"],
+    }),
+  );
+
   app.use("/events/*", loadSiteMiddleware);
   app.use("/events/*", extractIpMiddleware);
   app.use("/events/*", buildSessionIdMiddleware);
@@ -48,6 +58,17 @@ export const defineApp: DefineApi = ({ db }) => {
   );
 
   app.all("/mcp", defineMcp);
+
+  app.get("/tracker", defineTracker);
+
+  app.get(
+    "/tracker/dist/*",
+    serveStatic({
+      root: join(process.env.NODE_ENV === "production" ? "." : "..", "tracker", "dist"),
+      rewriteRequestPath: (path) => path.replace(/^\/tracker\/dist/, ""),
+      precompressed: true,
+    }),
+  );
 
   app.get("/health", defineHealth);
 
