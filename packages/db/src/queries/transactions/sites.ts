@@ -44,4 +44,14 @@ export class DbSites {
       schema: AnalyticsSchema.SiteSchema.pick({ id: true, hostname: true, status: true }),
     });
   }
+
+  async updateStatus({
+    id,
+    status,
+  }: Pick<Analytics["Site"], "id" | "status">): Promise<Result<void>> {
+    return this.#connection.run({
+      sql: `UPDATE yawa_analytics.sites SET status = $status, updated_at = now() AT TIME ZONE 'UTC' WHERE id = $id`,
+      values: { id, status },
+    });
+  }
 }
