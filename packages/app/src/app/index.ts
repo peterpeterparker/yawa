@@ -28,8 +28,9 @@ export const defineApp: DefineApi = ({ db }) => {
       allowMethods: ["POST"],
     }),
   );
+  app.use("/static/yawa.js", cors({ allowMethods: ["GET"] }));
   app.use(
-    "/tracker/*",
+    "/static/yawa/*",
     cors({
       allowMethods: ["GET"],
     }),
@@ -59,13 +60,13 @@ export const defineApp: DefineApi = ({ db }) => {
 
   app.all("/mcp", defineMcp);
 
-  app.get("/tracker", defineTracker);
+  app.get("/static/yawa.js", defineTracker);
 
   app.get(
-    "/tracker/dist/*",
+    "/static/yawa/dist/*",
     serveStatic({
       root: join(process.env.NODE_ENV === "production" ? "." : "..", "tracker", "dist"),
-      rewriteRequestPath: (path) => path.replace(/^\/tracker\/dist/, ""),
+      rewriteRequestPath: (path) => path.replace(/^\/static\/yawa\/dist/, ""),
       precompressed: true,
       onFound: (_path, context) => {
         context.header("Cache-Control", `public, immutable, max-age=604800`);

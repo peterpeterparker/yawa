@@ -21,7 +21,7 @@ export const defineTracker: DefineHandler<z.ZodType<Response>> = async (context)
 
   const serverUrl = `${protocol}//${host}`;
 
-  const script = `import { init } from '${serverUrl}/tracker/dist/index.js';init({serverUrl:"${serverUrl}"});`;
+  const script = `import { init } from '${serverUrl}/static/yawa/dist/index.js';init({serverUrl:"${serverUrl}"});`;
 
   return context.text(script, 200, {
     "Content-Type": "application/javascript; charset=utf-8",

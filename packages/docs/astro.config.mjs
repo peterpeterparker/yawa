@@ -46,9 +46,7 @@ export default defineConfig({
           attrs: {
             type: "module",
             async: true,
-            src: import.meta.env.PROD
-              ? "https://analytics.fluster.io/tracker"
-              : "http://localhost:3000/tracker",
+            src: `${import.meta.env.PROD ? "https://analytics.fluster.io" : "http://localhost:3000"}/static/yawa.js`,
           },
         },
       ],
