@@ -65,20 +65,10 @@ Run the server on any VPS or locally if you just want to give it a spin.
 
 6.  **Install the tracker**
 
-    Install the tracker in your website or frontend app:
+    Add this script tag to your `<head>` to load the tracker:
 
-    ```bash
-    npm install yawa-tracker
-    ```
-
-    Then initialize it:
-
-    ```ts
-    import { init } from "yawa-tracker";
-
-    const cleanup = init({
-      serverUrl: "https://your-yawa-server.com",
-    });
+    ```html
+    <script type="module" src="https://your-yawa-server.com/static/yawa.js"></script>
     ```
 
     Deploy or run your site and generate few page views.

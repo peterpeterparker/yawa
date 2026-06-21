@@ -10,9 +10,36 @@ import Yarn from "../../../components/docs/yarn.md";
 
 The tracker is a lightweight JavaScript library that collects page views, custom events, and Web Vitals from your site, and sends them to your yawa server.
 
-## Installation
+## Use a script tag
 
-Add the tracker to your website or frontend app:
+Your yawa server also serves the tracker as a static file, which lets you load it with a script tag:
+
+```html
+<script type="module" src="https://your-yawa-server.com/static/yawa.js"></script>
+```
+
+This is the simplest option if your site doesn't have a build step, or you'd rather not add a dependency. It works well for static site generators too. With Astro Starlight, for example, you can add it directly via the `head` config:
+
+```js
+// astro.config.mjs
+starlight({
+  head: [
+    {
+      tag: "script",
+      attrs: {
+        type: "module",
+        src: "https://your-yawa-server.com/static/yawa.js",
+      },
+    },
+  ],
+});
+```
+
+The script derives the server URL from where it was loaded, so no further configuration is needed.
+
+## Install as a package
+
+If your project uses a bundler, add the tracker to your website or frontend app:
 
 <Tabs>
   <TabItem label="pnpm">
@@ -26,7 +53,7 @@ Add the tracker to your website or frontend app:
   </TabItem>
 </Tabs>
 
-## Setup
+### Setup
 
 Initialize the lib once when your app loads:
 
@@ -38,7 +65,12 @@ const cleanup = init({
 });
 ```
 
-This automatically tracks page views on load and navigation (SPA-friendly via `history.pushState` and `popstate`).
+### Options
+
+| Option      | Required | Description                                      |
+| ----------- | -------- | ------------------------------------------------ |
+| `serverUrl` | Yes      | URL of your yawa server.                         |
+| `webVitals` | No       | Enable Web Vitals tracking. Defaults to `false`. |
 
 ## Custom events
 
@@ -53,6 +85,10 @@ track({ name: "signup", metadata: { plan: "pro" } });
 Keys and values must be strings, with a maximum of 10 keys and 200 characters per key/value.
 
 ## Web Vitals
+
+:::note
+Only available when installed as a package.
+:::
 
 Core Web Vitals (CLS, FCP, INP, LCP, TTFB) can also be collected by enabling the option when initializing the tracker:
 
@@ -74,10 +110,3 @@ const cleanup = init({
 | `visitAsync()`     | Async page view tracking.                           |
 | `track(data)`      | Fire-and-forget custom event.                       |
 | `trackAsync(data)` | Async custom event.                                 |
-
-## Options
-
-| Option      | Required | Description                                      |
-| ----------- | -------- | ------------------------------------------------ |
-| `serverUrl` | Yes      | URL of your yawa server.                         |
-| `webVitals` | No       | Enable Web Vitals tracking. Defaults to `false`. |
