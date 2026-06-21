@@ -26,5 +26,6 @@ export const defineTracker: DefineHandler<z.ZodType<Response>> = async (context)
   return context.text(script, 200, {
     "Content-Type": "application/javascript; charset=utf-8",
     "x-content-type-options": "nosniff",
+    "Cache-Control": "public, max-age=604800",
   });
 };

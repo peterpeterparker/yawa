@@ -67,6 +67,9 @@ export const defineApp: DefineApi = ({ db }) => {
       root: join(process.env.NODE_ENV === "production" ? "." : "..", "tracker", "dist"),
       rewriteRequestPath: (path) => path.replace(/^\/tracker\/dist/, ""),
       precompressed: true,
+      onFound: (_path, context) => {
+        context.header("Cache-Control", `public, immutable, max-age=604800`);
+      },
     }),
   );
 
