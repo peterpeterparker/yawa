@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS yawa_analytics.sites (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     hostname VARCHAR NOT NULL UNIQUE,
     status yawa_analytics.site_status NOT NULL DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'UTC'),
-    updated_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'UTC')
+    created_at TIMESTAMP DEFAULT current_timestamp,
+    updated_at TIMESTAMP DEFAULT current_timestamp
 );
 
 CREATE TABLE IF NOT EXISTS yawa_analytics.page_views (
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS yawa_analytics.page_views (
     campaign_utm_campaign VARCHAR,
     campaign_utm_term VARCHAR,
     campaign_utm_content VARCHAR,
-    created_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'UTC')
+    created_at TIMESTAMP DEFAULT current_timestamp
 );
 
 CREATE TABLE IF NOT EXISTS yawa_analytics.track_events (
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS yawa_analytics.track_events (
     visit_id UUID NOT NULL,
     name VARCHAR NOT NULL,
     metadata JSON,
-    created_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'UTC')
+    created_at TIMESTAMP DEFAULT current_timestamp
 );
 
 CREATE TYPE IF NOT EXISTS yawa_analytics.performance_metric_name AS ENUM ('CLS', 'FCP', 'INP', 'LCP', 'TTFB');
@@ -60,5 +60,5 @@ CREATE TABLE IF NOT EXISTS yawa_analytics.performance_metrics (
     delta DOUBLE NOT NULL,
     metric_id VARCHAR NOT NULL,
     navigation_type yawa_analytics.navigation_type,
-    created_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'UTC')
+    created_at TIMESTAMP DEFAULT current_timestamp
 );

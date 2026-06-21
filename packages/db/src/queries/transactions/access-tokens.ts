@@ -56,7 +56,7 @@ export class DbAccessTokens {
   async disable({ id }: Pick<Admin["AccessToken"], "id">): Promise<Result<void>> {
     return this.#connection.run({
       sql: `UPDATE yawa_admin.access_tokens
-            SET expires_at = now() AT TIME ZONE 'UTC', updated_at = now() AT TIME ZONE 'UTC'
+            SET expires_at = current_timestamp, updated_at = current_timestamp
             WHERE id = $id AND (expires_at IS NULL OR expires_at > current_timestamp)`,
       values: { id },
     });
