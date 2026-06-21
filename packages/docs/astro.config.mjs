@@ -27,7 +27,7 @@ export default defineConfig({
           tag: "meta",
           attrs: {
             property: "og:image",
-            content: "https://yetanotherwebanalytics.dev/social-image.jpg",
+            content: "https://yetanotherwebanalytics.dev/social-image-1.jpg",
           },
         },
         { tag: "meta", attrs: { property: "og:type", content: "website" } },
@@ -38,7 +38,7 @@ export default defineConfig({
           tag: "meta",
           attrs: {
             name: "twitter:image",
-            content: "https://yetanotherwebanalytics.dev/social-image.jpg",
+            content: "https://yetanotherwebanalytics.dev/social-image-1.jpg",
           },
         },
         {

@@ -13,6 +13,7 @@ COPY packages/db/package.json /temp/dev/packages/db/
 COPY packages/schema/package.json /temp/dev/packages/schema/
 COPY packages/cli/package.json /temp/dev/packages/cli/
 COPY packages/tracker/package.json /temp/dev/packages/tracker/
+COPY packages/docs/package.json /temp/dev/packages/docs/
 RUN cd /temp/dev && bun install --frozen-lockfile
 
 # install with --production (exclude devDependencies)
@@ -24,6 +25,7 @@ COPY packages/db/package.json /temp/prod/packages/db/
 COPY packages/schema/package.json /temp/prod/packages/schema/
 COPY packages/cli/package.json /temp/prod/packages/cli/
 COPY packages/tracker/package.json /temp/prod/packages/tracker/
+COPY packages/docs/package.json /temp/prod/packages/docs/
 RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 # copy node_modules from temp directory
@@ -35,6 +37,7 @@ COPY --from=install /temp/dev/packages/common/node_modules ./packages/common/nod
 COPY --from=install /temp/dev/packages/db/node_modules ./packages/db/node_modules
 COPY --from=install /temp/dev/packages/schema/node_modules ./packages/schema/node_modules
 COPY --from=install /temp/dev/packages/cli/node_modules ./packages/cli/node_modules
+COPY --from=install /temp/dev/packages/tracker/node_modules ./packages/tracker/node_modules
 
 COPY .oxfmtrc.json .oxfmtrc.json
 COPY .oxlintrc.json .oxlintrc.json
@@ -48,6 +51,7 @@ COPY packages/common ./packages/common
 COPY packages/db ./packages/db
 COPY packages/schema ./packages/schema
 COPY packages/cli ./packages/cli
+COPY packages/tracker ./packages/tracker
 
 # tests & build
 RUN bun test
@@ -55,6 +59,7 @@ RUN bun test
 ENV NODE_ENV=production
 RUN bun run --filter yawa-app build
 RUN bun run --filter yawa-cli build
+RUN bun run --filter yawa-tracker build
 
 # build final image
 FROM base AS release
@@ -67,6 +72,9 @@ COPY --from=install /temp/prod/node_modules ./node_modules
 # Copy runtimes
 COPY --from=prerelease /usr/src/app/packages/app/build/index.js ./index.js
 COPY --from=prerelease /usr/src/app/packages/cli/build/cli ./cli
+
+# Copy static files
+COPY --from=prerelease /usr/src/app/packages/tracker/dist ./tracker/dist
 
 # Copy resources
 COPY --from=prerelease /usr/src/app/packages/db/bootstrap ./bootstrap
