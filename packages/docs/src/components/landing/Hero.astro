@@ -187,30 +187,35 @@ const { title = data.title, tagline } = data.hero || {};
     .terminal {
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.875rem;
-        padding: var(--sl-nav-pad-y) 0;
+
+        @media screen and (min-width: 768px) {
+            padding: var(--sl-nav-pad-y) 0;
+        }
     }
 
     .terminal-body {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        max-height: 600px;
-        overflow-y: auto;
+
+        @media screen and (min-width: 768px) {
+            max-height: 595px;
+            overflow-y: auto;
+        }
     }
 
     .terminal-chat {
         flex: 1;
     }
 
-    .terminal-chat > .hidden {
-        display: none;
-    }
-
     .terminal-welcome {
-        margin: 1rem 2rem;
         border: 1px solid var(--sl-color-orange);
         border-radius: 4px;
         position: relative;
+
+        @media screen and (min-width: 768px) {
+            margin: 1rem 2rem;
+        }
     }
 
     .terminal-welcome-label {
@@ -257,16 +262,25 @@ const { title = data.title, tagline } = data.hero || {};
     }
 
     .terminal-welcome-divider {
+        display: none;
         width: 1px;
         background: var(--sl-color-orange-low);
         margin: 0 1rem;
         align-self: stretch;
+
+        @media screen and (min-width: 768px) {
+            display: block;
+        }
     }
 
     .terminal-welcome-right {
         flex: 2;
-        display: flex;
+        display: none;
         flex-direction: column;
+
+        @media screen and (min-width: 768px) {
+            display: flex;
+        }
     }
 
     .terminal-welcome-section {
@@ -294,7 +308,12 @@ const { title = data.title, tagline } = data.hero || {};
     }
 
     .terminal-chat {
+        display: none;
         padding: 0.5rem 2rem;
+
+        @media screen and (min-width: 768px) {
+            display: grid;
+        }
     }
 
     :global(.terminal-prompt) {
@@ -357,7 +376,12 @@ const { title = data.title, tagline } = data.hero || {};
     }
 
     .terminal-footer {
+        display: none;
         border-top: 1px solid var(--sl-color-gray-5);
+
+        @media screen and (min-width: 768px) {
+            display: grid;
+        }
     }
 
     .terminal-footer .terminal-prompt {
