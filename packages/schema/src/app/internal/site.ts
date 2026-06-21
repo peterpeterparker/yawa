@@ -9,3 +9,5 @@ export const CreateSiteRequestCodec = z.codec(CreateSiteRequestSchema, z.string(
 });
 
 export const CreateSiteResponseSchema = AnalyticsSchema.SiteSchema.pick({ id: true });
+
+export const UpdateSiteStatusRequestSchema = AnalyticsSchema.SiteSchema.pick({ status: true });
