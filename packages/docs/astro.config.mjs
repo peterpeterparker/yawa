@@ -74,6 +74,19 @@ export default defineConfig({
           label: "Start Here",
           items: [{ slug: "getting-started" }, { slug: "how-it-works" }],
         },
+        {
+          label: "Guides",
+          items: [{ slug: "guides/connect-mcp-client" }, { slug: "guides/deploy" }],
+        },
+        {
+          label: "Reference",
+          items: [
+            { slug: "reference/tracker" },
+            { slug: "reference/mcp-tools" },
+            { slug: "reference/configuration" },
+          ],
+        },
+        { slug: "examples" },
         { slug: "privacy" },
       ],
       components: {
