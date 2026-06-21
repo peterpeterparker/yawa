@@ -1,0 +1,101 @@
+---
+title: Deploy on a VPS
+description: How to deploy yawa on a VPS.
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+This guide covers deploying yawa on a fresh VPS. The example uses Hetzner Cloud with Ubuntu 24.04, but any VPS with a recent Ubuntu/Debian and Docker support works.
+
+## Prerequisites
+
+- A VPS with Ubuntu 24.04
+- A domain pointing to the VPS IP (A record)
+- SSH access as root
+
+## Setup
+
+<Steps>
+
+1. **Update the system and install Caddy and Docker**
+
+   ```bash
+   apt update && apt upgrade -y
+   apt install -y curl caddy docker.io docker-compose-plugin
+   ```
+
+2. **Create the deployment directory**
+
+   ```bash
+   mkdir -p /opt/yawa
+   cd /opt/yawa
+   ```
+
+3. **Create a `docker-compose.yml`**
+
+   ```yaml
+   services:
+     app:
+       image: peterpeterparker/yawa:latest
+       ports:
+         - "3000:3000"
+       volumes:
+         - yawa-data:/data
+       environment:
+         - YAWA_SESSION_SECRET=${YAWA_SESSION_SECRET}
+       restart: unless-stopped
+
+   volumes:
+     yawa-data:
+   ```
+
+   :::tip
+   If port 3000 is already used by another service on your VPS, map a different host port like `3100:3000` above.
+   :::
+
+4. **Generate a secret and start the server**
+
+   ```bash
+   echo "YAWA_SESSION_SECRET=$(openssl rand -base64 32)" > .env
+   docker compose up -d
+   ```
+
+5. **Configure Caddy**
+
+   Once your domain's DNS has propagated, configure Caddy as a reverse proxy. Check propagation first:
+
+   ```bash
+   dig yourdomain.com +short @8.8.8.8
+   ```
+
+   Then write the Caddyfile:
+
+   ```bash
+   cat > /etc/caddy/Caddyfile << 'EOF'
+   yourdomain.com {
+       reverse_proxy localhost:5987
+   }
+   EOF
+
+   systemctl restart caddy
+   ```
+
+   Caddy automatically provisions and renews a TLS certificate via Let's Encrypt.
+
+</Steps>
+
+## Verify
+
+```bash
+curl https://yourdomain.com/health
+```
+
+## Updating
+
+To deploy a new release, pull the latest image and recreate the container:
+
+```bash
+cd /opt/yawa
+docker compose pull
+docker compose up -d
+```

@@ -1,0 +1,83 @@
+---
+title: Tracker
+description: Install and configure the yawa tracker in your website or app.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import Pnpm from "../../../components/docs/pnpm.md";
+import Npm from "../../../components/docs/npm.md";
+import Yarn from "../../../components/docs/yarn.md";
+
+The tracker is a lightweight JavaScript library that collects page views, custom events, and Web Vitals from your site, and sends them to your yawa server.
+
+## Installation
+
+Add the tracker to your website or frontend app:
+
+<Tabs>
+  <TabItem label="pnpm">
+    <Pnpm />
+  </TabItem>
+  <TabItem label="npm">
+    <Npm />
+  </TabItem>
+  <TabItem label="yarn">
+    <Yarn />
+  </TabItem>
+</Tabs>
+
+## Setup
+
+Initialize the lib once when your app loads:
+
+```ts
+import { init } from "yawa-tracker";
+
+const cleanup = init({
+  serverUrl: "https://your-yawa-server.com",
+});
+```
+
+This automatically tracks page views on load and navigation (SPA-friendly via `history.pushState` and `popstate`).
+
+## Custom events
+
+To track a custom event, call `track` with a name and optional metadata:
+
+```ts
+import { track } from "yawa-tracker";
+
+track({ name: "signup", metadata: { plan: "pro" } });
+```
+
+Keys and values must be strings, with a maximum of 10 keys and 200 characters per key/value.
+
+## Web Vitals
+
+Core Web Vitals (CLS, FCP, INP, LCP, TTFB) can also be collected by enabling the option when initializing the tracker:
+
+```ts
+import { init } from "yawa-tracker";
+
+const cleanup = init({
+  serverUrl: "https://your-yawa-server.com",
+  webVitals: true,
+});
+```
+
+## API
+
+| Function           | Description                                         |
+| ------------------ | --------------------------------------------------- |
+| `init(options)`    | Initialize the tracker. Returns a cleanup function. |
+| `visit()`          | Fire-and-forget page view tracking.                 |
+| `visitAsync()`     | Async page view tracking.                           |
+| `track(data)`      | Fire-and-forget custom event.                       |
+| `trackAsync(data)` | Async custom event.                                 |
+
+## Options
+
+| Option      | Required | Description                                      |
+| ----------- | -------- | ------------------------------------------------ |
+| `serverUrl` | Yes      | URL of your yawa server.                         |
+| `webVitals` | No       | Enable Web Vitals tracking. Defaults to `false`. |
