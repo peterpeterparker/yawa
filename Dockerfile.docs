@@ -1,0 +1,35 @@
+FROM debian:bookworm-slim AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    tar \
+    xz-utils \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Bun
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
+
+# kyu CLI
+RUN curl --proto '=https' --tlsv1.2 -LsSf curl -fsSL https://kyushu.dev/install | bash
+ENV PATH="/root/.kyu/bin:${PATH}"
+
+WORKDIR /app
+COPY . .
+
+RUN bun install --frozen-lockfile
+
+RUN bun run --filter yawa-docs build
+
+RUN cd packages/docs && kyu build kyushu.build.toml
+
+RUN mkdir -p /out/worker && \
+    cp packages/docs/worker/__kyushu_worker.wasm /out/worker/ && \
+    cp packages/docs/kyushu.run.toml /out/ && \
+    cp -r packages/docs/dist /out/dist && \
+    tar -czf /docs.tar.gz -C /out .
+
+FROM scratch AS export
+COPY --from=builder /docs.tar.gz /
