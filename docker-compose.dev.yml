@@ -1,5 +1,5 @@
 # Development only. Uses locally built image.
-# Build first: docker buildx build . --file Dockerfile --progress=plain --no-cache --platform=linux/arm64 -t yawa
+# Build first: docker buildx build . --file Dockerfile.app --progress=plain --no-cache --platform=linux/arm64 -t yawa
 services:
   app:
     image: yawa
