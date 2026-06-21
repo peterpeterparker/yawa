@@ -60,6 +60,8 @@ export default defineConfig({
         "./src/styles/nav.css",
         "./src/styles/header.css",
         "./src/styles/button.css",
+        "./src/styles/scrollbar.css",
+        "./src/styles/selection.css",
       ],
       social: [
         { icon: "github", label: "GitHub", href: "https://github.com/peterpeterparker/yawa" },
