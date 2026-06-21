@@ -50,7 +50,7 @@ export class DbSites {
     status,
   }: Pick<Analytics["Site"], "id" | "status">): Promise<Result<void>> {
     return this.#connection.run({
-      sql: `UPDATE yawa_analytics.sites SET status = $status, updated_at = now() AT TIME ZONE 'UTC' WHERE id = $id`,
+      sql: `UPDATE yawa_analytics.sites SET status = $status, updated_at = current_timestamp WHERE id = $id`,
       values: { id, status },
     });
   }
