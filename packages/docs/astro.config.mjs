@@ -41,6 +41,16 @@ export default defineConfig({
             content: "https://yetanotherwebanalytics.dev/social-image-1.jpg",
           },
         },
+        {
+          tag: "script",
+          attrs: {
+            type: "module",
+            async: true,
+            src: import.meta.env.PROD
+              ? "https://analytics.fluster.io/tracker"
+              : "http://localhost:3000/tracker",
+          },
+        },
       ],
       logo: {
         light: "./src/assets/logo-light.svg",
