@@ -90,6 +90,7 @@ export default defineConfig({
           label: "Reference",
           items: [
             { slug: "reference/tracker" },
+            { slug: "reference/cli" },
             { slug: "reference/mcp-tools" },
             { slug: "reference/configuration" },
           ],
