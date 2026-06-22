@@ -1,6 +1,6 @@
 import { describe, expect, test, spyOn, afterEach } from "bun:test";
-import * as logModule from "../../src/utils/log";
-import { tokenCreate } from "../../src/commands/_token.create";
+import * as logModule from "../../../src/utils/log.ts";
+import { tokenCreate } from "../../../src/commands/_token/create.ts";
 
 describe("tokenCreate", () => {
   let fetchSpy: ReturnType<typeof spyOn>;

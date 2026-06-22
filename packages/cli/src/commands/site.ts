@@ -1,7 +1,7 @@
 import { error } from "../utils/log";
-import { logHelpSite } from "../help/site.help";
-import { logHelpSiteCreate } from "../help/site.create.help";
-import { siteCreate } from "./_site.create";
+import { logHelpSite } from "../help/_site/help.ts";
+import { logHelpSiteCreate } from "../help/_site/create.help.ts";
+import { siteCreate } from "./_site/create.ts";
 
 export const site = async (args?: string[]) => {
   const [subCommand] = args ?? [];

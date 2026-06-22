@@ -1,9 +1,9 @@
-import { nextArg } from "../utils/args";
+import { nextArg } from "../../utils/args.ts";
 import { assertNotEmptyString } from "yawa-common";
-import { log } from "../utils/log";
+import { log } from "../../utils/log.ts";
 import { InternalSchema } from "yawa-schema/app";
-import { ENV } from "../env";
-import { exitWithResponse } from "../utils/exit";
+import { ENV } from "../../env.ts";
+import { exitWithResponse } from "../../utils/exit.ts";
 
 export const tokenCreate = async (args?: string[]) => {
   const name = nextArg({ args, option: "--name" });
