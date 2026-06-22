@@ -6,7 +6,6 @@ import { sitesList } from "./_site/list";
 import { logHelpSiteList } from "../help/_site/list.help";
 import { siteUpdate } from "./_site/update";
 import { logHelpSiteUpdate } from "../help/_site/update.help";
-import * as console from "node:console";
 
 export const site = async (args?: string[]) => {
   const [subCommand] = args ?? [];
