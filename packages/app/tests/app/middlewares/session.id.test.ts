@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Hono } from "hono";
 import { buildSessionIdMiddleware } from "../../../src/app/middlewares/session-id";
-import type { AnalyticsSessionApiEnv } from "../../../src/app/types/api.ts";
+import type { AnalyticsSessionApiEnv } from "../../../src/app/types/api";
 
 const site = {
   id: "01912d4e-1234-7000-8000-000000000000",

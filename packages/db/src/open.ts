@@ -3,7 +3,7 @@ import { DbInstance } from "./db/instance";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 import { migrate } from "./migrate";
-import { envDataDir } from "./env.ts";
+import { envDataDir } from "./env";
 
 export const openDb = async (): Promise<Result<DbInstance>> => {
   const instanceResult = await tryCatch(async () => {

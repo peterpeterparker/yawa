@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import type { DefineApi } from "../types/api";
 import { zValidator } from "@hono/zod-validator";
-import { defineCreateToken, defineDisableToken, defineListTokens } from "./_tokens.ts";
+import { defineCreateToken, defineDisableToken, defineListTokens } from "./_tokens";
 import { InternalSchema } from "yawa-schema/app";
 import { loadDbMiddleware } from "../middlewares/db";
 import { defineCreateSite, defineListSites, defineUpdateSiteStatus } from "./_sites";

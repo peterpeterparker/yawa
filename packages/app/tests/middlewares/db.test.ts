@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { Hono } from "hono";
 import { __createDbInstanceForTest__, DbInstance } from "yawa-db";
 import { loadDbMiddleware } from "../../src/middlewares/db";
-import type { ApiEnv } from "../../src/types/api.ts";
+import type { ApiEnv } from "../../src/types/api";
 
 const makeApp = (db: DbInstance) => {
   const app = new Hono<ApiEnv>();

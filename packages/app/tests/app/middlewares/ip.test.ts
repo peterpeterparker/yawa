@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Hono } from "hono";
-import type { AnalyticsApiEnv } from "../../../src/app/types/api.ts";
+import type { AnalyticsApiEnv } from "../../../src/app/types/api";
 import { extractIpMiddleware } from "../../../src/app/middlewares/ip";
 
 const makeApp = () => {

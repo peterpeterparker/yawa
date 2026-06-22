@@ -1,7 +1,7 @@
 import { error } from "../utils/log";
-import { logHelpToken } from "../help/_token/help.ts";
-import { logHelpTokenCreate } from "../help/_token/create.help.ts";
-import { tokenCreate } from "./_token/create.ts";
+import { logHelpToken } from "../help/_token/help";
+import { logHelpTokenCreate } from "../help/_token/create.help";
+import { tokenCreate } from "./_token/create";
 
 export const token = async (args?: string[]) => {
   const [subCommand] = args ?? [];

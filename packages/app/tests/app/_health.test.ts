@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Hono } from "hono";
-import { defineHealth } from "../../src/app/_health.ts";
+import { defineHealth } from "../../src/app/_health";
 
 describe("defineHealth", () => {
   const app = new Hono();

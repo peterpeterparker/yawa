@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { __createDbInstanceForTest__, DbInstance } from "yawa-db";
 import { DbSites } from "yawa-db";
 import { loadSiteMiddleware } from "../../../src/app/middlewares/site";
-import type { AnalyticsApiEnv } from "../../../src/app/types/api.ts";
+import type { AnalyticsApiEnv } from "../../../src/app/types/api";
 
 const makeApp = (db: DbInstance) => {
   const app = new Hono<AnalyticsApiEnv>();

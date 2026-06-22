@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { type Result } from "yawa-common";
 import * as z from "zod";

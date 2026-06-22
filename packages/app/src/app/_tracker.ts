@@ -1,4 +1,4 @@
-import type { DefineHandler } from "../types/api.ts";
+import type { DefineHandler } from "../types/api";
 import { isEmptyString, isNullish } from "yawa-common";
 import * as z from "zod";
 

@@ -4,7 +4,7 @@ import { __createDbInstanceForTest__, DbInstance, DbSites } from "yawa-db";
 import { zValidator } from "@hono/zod-validator";
 import { AppSchema } from "yawa-schema/app";
 import * as z from "zod";
-import type { AnalyticsSessionApiEnv } from "../../src/app/types/api.ts";
+import type { AnalyticsSessionApiEnv } from "../../src/app/types/api";
 import { defineCreatePerformanceMetric } from "../../src/app/_performance-metrics";
 
 let instance: DbInstance;
