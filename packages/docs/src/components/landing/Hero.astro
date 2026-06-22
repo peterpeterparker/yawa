@@ -70,10 +70,44 @@ const { title = data.title, tagline } = data.hero || {};
             <p>Available commands:</p>
             
             <ul>
+            <li>about - what's yawa</li>
+            <li>testimonials - what people say</li>
             <li>/docs - go to documentation</li>
             <li>/github - go to GitHub</li>
+            <li>/author - go to daviddalbusco.com</li>
             </ul>
 </div>`;
+
+        renderResponse({htmlResponse});
+    }
+
+    const renderDescription = (args: {prompt: string}) => {
+        renderPrompt(args);
+
+        const htmlResponse = `<span class="terminal-bullet">•</span>
+
+        <div class="terminal-response">
+            <p><code>yawa</code> is yet another self-hosted web analytics platform but with no UI. Instead of dashboards, you query your data through the MCP, asking Claude or any compatible AI client questions about your traffic in plain language.</p>
+             
+            <ul>
+            <li><strong>Self-hostable</strong> - runs on any server</li>
+            <li><strong>Privacy-friendly</strong> - no cookie banners, no GDPR consent</li>
+            <li><strong>LLM ready</strong> - ask Claude or any MCP client about your traffic</li>
+            <li><strong>Full-featured</strong> - page views, referrers, events, web vitals and more</li>
+            </ul>
+</div>`
+
+        renderResponse({htmlResponse});
+    }
+
+    const renderTestimonials = (args: {prompt: string}) => {
+        renderPrompt(args);
+
+        const htmlResponse = `<span class="terminal-bullet">•</span>
+
+        <div class="terminal-response">
+            <p><strong>"60% of the time, it works every time."</strong>  - Brian Fantana, the OG of analytics</p>
+        </div>`
 
         renderResponse({htmlResponse});
     }
@@ -90,14 +124,28 @@ const { title = data.title, tagline } = data.hero || {};
             return;
         }
 
-        const prompt = input?.value?.trim();
+        const prompt = input?.value?.toLowerCase().trim();
 
         switch (prompt) {
+            case "what is yawa":
+            case "what is yawa?":
+            case "about":
+                renderDescription({prompt});
+                break;
+            case "what do people say":
+            case "what do people say?":
+            case "testimonial":
+            case "testimonials":
+                renderTestimonials({prompt});
+                break;
             case "/docs":
                 await navigate('/getting-started');
                 break;
             case "/github":
                 window.location.href = "https://github.com/peterpeterparker/yawa";
+                break;
+            case "/author":
+                window.location.href = "https://daviddalbusco.com";
                 break;
             case "?":
             case "help":
@@ -132,7 +180,7 @@ const { title = data.title, tagline } = data.hero || {};
             <div class="terminal-welcome-divider"></div>
             <div class="terminal-welcome-right">
                 <p class="terminal-welcome-section">Tips for getting started</p>
-                <p class="terminal-welcome-line">Run /docs to access the documentation.</p>
+                <p class="terminal-welcome-line">Run /help to see available commands.</p>
                 <div class="terminal-welcome-sep"></div>
                 <p class="terminal-welcome-section">What's new</p>
                 <p class="terminal-welcome-line">26+ MCP analytics tools.</p>
@@ -358,6 +406,12 @@ const { title = data.title, tagline } = data.hero || {};
         padding: 0;
         list-style-type: none;
         margin: 0 0 0 -1px;
+    }
+
+    :global(.terminal-response code) {
+        background-color: var(--sl-color-bg-inline-code);
+        margin-block: -0.125rem;
+        padding: 0.125rem 0.375rem;
     }
 
     .terminal-response table {

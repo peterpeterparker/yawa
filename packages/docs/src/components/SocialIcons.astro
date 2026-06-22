@@ -1,0 +1,12 @@
+---
+import Default from '@astrojs/starlight/components/SocialIcons.astro';
+import { LinkButton } from '@astrojs/starlight/components';
+
+const isHomepage = Astro.locals.starlightRoute.id === '';
+---
+
+{
+    isHomepage && <LinkButton href="/getting-started" variant="minimal">Docs</LinkButton>
+}
+
+<Default {...Astro.props}><slot /></Default>
