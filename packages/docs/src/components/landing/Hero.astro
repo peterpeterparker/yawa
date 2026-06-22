@@ -1,6 +1,7 @@
 ---
 import Logo from "./Logo.astro";
 import pkg from "../../../../app/package.json";
+import { LinkButton } from '@astrojs/starlight/components';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline } = data.hero || {};
@@ -232,6 +233,10 @@ const { title = data.title, tagline } = data.hero || {};
     </div>
 </div>
 
+<div class="footer">
+    <LinkButton href="/getting-started" variant="secondary" icon="right-arrow">Get started</LinkButton>
+</div>
+
 <style>
     .terminal {
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -357,11 +362,12 @@ const { title = data.title, tagline } = data.hero || {};
     }
 
     .terminal-chat {
-        display: none;
-        padding: 0.5rem 2rem;
+        display: grid;
+        padding: 1rem 0;
 
         @media screen and (min-width: 768px) {
             display: grid;
+            padding: 0.5rem 2rem;
         }
     }
 
@@ -476,4 +482,13 @@ const { title = data.title, tagline } = data.hero || {};
         caret-color: var(--sl-color-purple);
     }
 
+    .footer {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+
+        @media screen and (min-width: 768px) {
+            display: none;
+        }
+    }
 </style>
