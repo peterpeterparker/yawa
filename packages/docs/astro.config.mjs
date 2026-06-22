@@ -100,7 +100,9 @@ export default defineConfig({
       components: {
         Hero: "./src/components/landing/Hero.astro",
         Footer: "./src/components/landing/Footer.astro",
+        MarkdownContent: "./src/components/landing/MarkdownContent.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
+        SocialIcons: "./src/components/SocialIcons.astro",
       },
     }),
   ],

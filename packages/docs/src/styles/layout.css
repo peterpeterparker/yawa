@@ -3,6 +3,12 @@
   --layout-section-border: 1px solid var(--sl-color-hairline-shade);
 }
 
+@media screen and (min-width: 768px) {
+  :root[data-has-hero] div.page > div.main-frame div.content-panel {
+    padding: 0;
+  }
+}
+
 @media screen and (min-width: 1140px) {
   :root[data-has-hero] div.page {
     padding: var(--sl-main-pad);
@@ -30,10 +36,6 @@
   }
 
   :root[data-has-hero] div.page > div.main-frame main {
-    padding: 0;
-  }
-
-  :root[data-has-hero] div.page > div.main-frame div.content-panel {
     padding: 0;
   }
 

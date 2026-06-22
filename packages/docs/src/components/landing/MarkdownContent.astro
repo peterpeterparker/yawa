@@ -1,0 +1,16 @@
+---
+import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+
+const isHomepage = Astro.locals.starlightRoute.id === '';
+---
+
+{
+    isHomepage ? (
+    <>
+    </>
+        ) : (
+    <Default>
+        <slot />
+    </Default>
+        )
+}
