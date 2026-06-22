@@ -217,7 +217,7 @@ const { title = data.title, tagline } = data.hero || {};
                 <tr><td>/blog/hello-world</td><td>87</td><td>103</td></tr>
                 </tbody>
             </table>
-            <p>Your homepage is clearly the standout this week, with the blog close behind.</p>
+            <p>Your homepage clearly stands out, with the blog close behind.</p>
         </div>
     </div>
     </div>
@@ -240,7 +240,16 @@ const { title = data.title, tagline } = data.hero || {};
 <style>
     .terminal {
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 0.875rem;
+        font-size: var(--sl-text-sm);
+        margin-top: 0;
+
+        @media screen and (min-width: 768px) {
+            margin-top: 0.5rem;
+        }
+
+        @media screen and (min-width: 1140px) {
+            margin-top: 1.5rem;
+        }
     }
 
     .terminal-body {
@@ -275,7 +284,7 @@ const { title = data.title, tagline } = data.hero || {};
         background: var(--sl-color-bg-nav);
         padding: 0 0.4rem;
         color: var(--sl-color-orange);
-        font-size: 0.8rem;
+        font-size: var(--sl-text-2xs);
     }
 
     .yawa-version {
@@ -310,9 +319,12 @@ const { title = data.title, tagline } = data.hero || {};
 
     .terminal-welcome-tagline {
         color: var(--sl-color-blue);
-        font-size: 0.75rem;
+        font-size: var(--sl-text-2xs);
         margin: 0;
-        text-align: left;
+
+        @media screen and (min-width: 768px) {
+            text-align: left;
+        }
     }
 
     .terminal-welcome-divider {
@@ -363,7 +375,7 @@ const { title = data.title, tagline } = data.hero || {};
 
     .terminal-chat {
         display: grid;
-        padding: 1rem 0;
+        padding: 1.5rem 0;
 
         @media screen and (min-width: 768px) {
             display: grid;
@@ -490,5 +502,9 @@ const { title = data.title, tagline } = data.hero || {};
         @media screen and (min-width: 768px) {
             display: none;
         }
+    }
+
+    .footer a {
+        font-size: var(--sl-text-base);
     }
 </style>
