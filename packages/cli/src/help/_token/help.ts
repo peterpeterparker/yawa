@@ -4,6 +4,8 @@ import {
   TITLE_AND_VERSION,
   TOKEN_CREATE_DESCRIPTION,
   TOKEN_DESCRIPTION,
+  TOKEN_DISABLE_DESCRIPTION,
+  TOKEN_LIST_DESCRIPTION,
 } from "../../_constants";
 import { log } from "../../utils/log";
 
@@ -11,6 +13,8 @@ const usage = `Usage: ${lime("yawa")} ${cyan("token")} ${magenta("<subcommand>")
 
 Commands:
   ${cyan("create")}               ${TOKEN_CREATE_DESCRIPTION}
+  ${cyan("disable")}              ${TOKEN_DISABLE_DESCRIPTION}
+  ${cyan("list")}                 ${TOKEN_LIST_DESCRIPTION}
   
 Options:
   ${OPTION_HELP}
