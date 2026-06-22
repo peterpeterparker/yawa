@@ -28,10 +28,10 @@ export const run = async () => {
   if (hasArgs({ args, options: ["-h", "--help"] })) {
     switch (cmd) {
       case "site":
-        helpSite();
+        helpSite(args);
         break;
       case "token":
-        helpToken();
+        helpToken(args);
         break;
       default:
         error("Unknown command.");

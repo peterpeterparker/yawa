@@ -7,6 +7,10 @@ export const OPTION_HELP = `${yellow("-h, --help")}            Output usage info
 
 export const TOKEN_DESCRIPTION = "Administrate access token";
 export const TOKEN_CREATE_DESCRIPTION = "Create a new access token";
+export const TOKEN_LIST_DESCRIPTION = "List all access tokens";
+export const TOKEN_DISABLE_DESCRIPTION = "Disable an access token";
 
 export const SITE_DESCRIPTION = "Manage registered sites for analytics ingestion";
 export const SITE_CREATE_DESCRIPTION = "Register a new site by hostname";
+export const SITE_LIST_DESCRIPTION = "List all registered sites";
+export const SITE_UPDATE_DESCRIPTION = "Update the status of a site";

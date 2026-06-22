@@ -21,7 +21,7 @@ export const defineCreateToken: DefineHandler<
   const result = await DbAccessTokens.create({ connection }).insert({
     name,
     token_hash: hash,
-    expires_at: expires_at ?? null,
+    expires_at: expires_at != null ? expires_at.replace("T", " ").slice(0, 19) : null,
   });
 
   if (result.status === "error") {

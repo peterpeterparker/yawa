@@ -3,15 +3,7 @@ import type { Option, Result } from "yawa-common";
 import { type Admin, AdminSchema } from "yawa-schema/db";
 import * as z from "zod";
 
-const TokenListSchema = AdminSchema.AccessTokenSchema.pick({
-  id: true,
-  name: true,
-  expires_at: true,
-  created_at: true,
-  updated_at: true,
-});
-
-export const ListTokensSchema = z.array(TokenListSchema);
+export const ListTokensSchema = z.array(AdminSchema.AccessTokenWithoutHashSchema);
 
 export class DbAccessTokens {
   #connection: DbConnection;
@@ -49,7 +41,7 @@ export class DbAccessTokens {
   async findAll(): Promise<Result<z.infer<typeof ListTokensSchema>>> {
     return this.#connection.query({
       sql: `SELECT id, name, expires_at, created_at, updated_at FROM yawa_admin.access_tokens ORDER BY name`,
-      schema: TokenListSchema,
+      schema: AdminSchema.AccessTokenWithoutHashSchema,
     });
   }
 

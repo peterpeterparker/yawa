@@ -9,3 +9,5 @@ export const AccessTokenSchema = z.strictObject({
   updated_at: TimestampSchema,
   expires_at: TimestampSchema.nullable(),
 });
+
+export const AccessTokenWithoutHashSchema = AccessTokenSchema.omit({ token_hash: true });
