@@ -26,4 +26,26 @@ describe("defineTracker", () => {
     const body = await res.text();
     expect(body).toContain('init({serverUrl:"https://yetanotherwebanalytics.dev"});');
   });
+
+  test("uses x-forwarded-proto when behind a reverse proxy", async () => {
+    const res = await app.request("http://analytics.fluster.io/static/yawa.js", {
+      headers: {
+        "x-forwarded-proto": "https",
+      },
+    });
+
+    const body = await res.text();
+    expect(body).toBe(
+      "import { init } from 'https://analytics.fluster.io/static/yawa/dist/index.js';init({serverUrl:\"https://analytics.fluster.io\"});",
+    );
+  });
+
+  test("falls back to request protocol when x-forwarded-proto is absent", async () => {
+    const res = await app.request("http://localhost:3000/static/yawa.js");
+
+    const body = await res.text();
+    expect(body).toContain(
+      "import { init } from 'http://localhost:3000/static/yawa/dist/index.js'",
+    );
+  });
 });
