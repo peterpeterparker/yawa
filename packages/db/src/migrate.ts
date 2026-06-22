@@ -6,7 +6,7 @@ import { type System } from "yawa-schema/db";
 import type { DbConnection } from "./db/connection";
 import type { Dirent } from "node:fs";
 import { DbMigration } from "./queries/transactions/migration";
-import { envMigrationsDir, envSystemSqlPath } from "./env.ts";
+import { envMigrationsDir, envSystemSqlPath } from "./env";
 
 interface DbMigrateArgs {
   instance: DbInstance;

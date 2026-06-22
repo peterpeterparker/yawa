@@ -1,9 +1,9 @@
-import { nextArg } from "../../utils/args.ts";
+import { nextArg } from "../../utils/args";
 import { assertNotEmptyString } from "yawa-common";
-import { log } from "../../utils/log.ts";
+import { log } from "../../utils/log";
 import { InternalSchema } from "yawa-schema/app";
-import { ENV } from "../../env.ts";
-import { exitWithResponse } from "../../utils/exit.ts";
+import { ENV } from "../../env";
+import { exitWithResponse } from "../../utils/exit";
 
 export const siteCreate = async (args?: string[]) => {
   const hostname = nextArg({ args, option: "--hostname" });

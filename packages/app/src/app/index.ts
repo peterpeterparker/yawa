@@ -12,7 +12,7 @@ import { assertAuthMiddleware } from "../middlewares/auth";
 import { defineMcp } from "./_mcp";
 import { defineCreateTrackEvent } from "./_track-events";
 import { defineCreatePerformanceMetric } from "./_performance-metrics";
-import { defineHealth } from "./_health.ts";
+import { defineHealth } from "./_health";
 import { defineTracker } from "./_tracker";
 import { serveStatic } from "hono/bun";
 import { join } from "node:path";

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Hono } from "hono";
-import { defineTracker } from "../../src/app/_tracker.ts";
+import { defineTracker } from "../../src/app/_tracker";
 
 describe("defineTracker", () => {
   const app = new Hono();

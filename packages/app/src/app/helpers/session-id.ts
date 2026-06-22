@@ -2,7 +2,7 @@ import type { Ip } from "../types/ip";
 import { hash } from "../../utils/hash";
 import type { Analytics } from "yawa-schema/db";
 import { isEmptyString, type Result } from "yawa-common";
-import { envSessionSecret } from "../../env.ts";
+import { envSessionSecret } from "../../env";
 
 export class HashSessionIdMissingSecretError extends Error {}
 

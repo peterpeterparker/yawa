@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { version } from "../../../package.json";
 import { StreamableHTTPTransport } from "@hono/mcp";

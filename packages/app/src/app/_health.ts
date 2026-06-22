@@ -1,4 +1,4 @@
-import type { DefineHandler } from "../types/api.ts";
+import type { DefineHandler } from "../types/api";
 import * as z from "zod";
 
 const HealthSchema = z.strictObject({
