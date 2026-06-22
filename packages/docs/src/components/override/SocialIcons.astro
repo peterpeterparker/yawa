@@ -6,7 +6,18 @@ const isHomepage = Astro.locals.starlightRoute.id === '';
 ---
 
 {
-    isHomepage && <LinkButton href="/getting-started" variant="minimal">Docs</LinkButton>
+    isHomepage && <LinkButton href="/getting-started" variant="minimal" class="docs">Docs</LinkButton>
 }
 
 <Default {...Astro.props}><slot /></Default>
+
+<style>
+    .docs {
+        color: var(--sl-color-text-accent);
+        font-size: var(--sl-text-sm);
+    }
+
+    .docs:hover {
+        color: var(--sl-color-white);
+    }
+</style>
