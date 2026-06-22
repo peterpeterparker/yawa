@@ -1,5 +1,5 @@
 import type { DefineHandler } from "../types/api";
-import { isEmptyString, isNullish } from "yawa-common";
+import { isEmptyString, isNullish, notEmptyString } from "yawa-common";
 import * as z from "zod";
 
 export const defineTracker: DefineHandler<z.ZodType<Response>> = async (context) => {
@@ -17,7 +17,11 @@ export const defineTracker: DefineHandler<z.ZodType<Response>> = async (context)
     return context.json({ error: "Bad Request" }, 400);
   }
 
-  const { protocol, host } = url;
+  const { protocol: urlProtocol, host } = url;
+
+  const proxiedProto = context.req.header("x-forwarded-proto");
+
+  const protocol = notEmptyString(proxiedProto) ? `${proxiedProto}:` : urlProtocol;
 
   const serverUrl = `${protocol}//${host}`;
 
