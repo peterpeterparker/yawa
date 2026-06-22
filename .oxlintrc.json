@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "oxc"],
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
   "ignorePatterns": ["dist"],
   "categories": {
     "correctness": "error"
@@ -15,7 +15,8 @@
           "variables": "off"
         }
       }
-    ]
+    ],
+    "import/extensions": ["error", "never", { "astro": "always", "json": "always" }]
   },
   "env": {
     "builtin": true
