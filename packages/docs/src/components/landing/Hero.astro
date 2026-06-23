@@ -10,6 +10,19 @@ const { title = data.title, tagline } = data.hero || {};
 <script>
     import { navigate } from 'astro:transitions/client';
 
+    const yawaLib = `${process.env.NODE_ENV === "production"
+        ? "https://analytics.fluster.io" :
+        "http://localhost:3000"}/static/yawa/dist/index.js`
+
+    type TrackEvent = {name: "terminal-help"} | {name: "terminal-about"}  | {name: "terminal-testimonials"} | {name: "terminal-docs"} | {name: "terminal-github"} | {name: "terminal-author"} | {name: "terminal-other", metadata: {prompt: string}}
+
+    // Used as fire and forget on purposes
+    export const trackEvent = async ($event: TrackEvent) => {
+        const {trackAsync} = await import(yawaLib);
+
+        await trackAsync($event);
+    }
+
     const render = ({nodes}: {nodes: NodeList}) => {
         const body = document.querySelector("div.terminal-body");
 
@@ -131,29 +144,36 @@ const { title = data.title, tagline } = data.hero || {};
             case "what is yawa":
             case "what is yawa?":
             case "about":
+                trackEvent({name: "terminal-about"});
                 renderDescription({prompt});
                 break;
             case "what do people say":
             case "what do people say?":
             case "testimonial":
             case "testimonials":
+                trackEvent({name: "terminal-testimonials"});
                 renderTestimonials({prompt});
                 break;
             case "/docs":
+                trackEvent({name: "terminal-docs"});
                 await navigate('/getting-started');
                 break;
             case "/github":
+                trackEvent({name: "terminal-github"});
                 window.location.href = "https://github.com/peterpeterparker/yawa";
                 break;
             case "/author":
+                trackEvent({name: "terminal-author"});
                 window.location.href = "https://daviddalbusco.com";
                 break;
             case "?":
             case "help":
             case "/help":
+                trackEvent({name: "terminal-help"});
                 renderHelp({prompt});
                 break;
             default:
+                trackEvent({name: "terminal-other", metadata: {prompt: prompt ?? ""}});
                 renderItsATrap({prompt});
         }
 
