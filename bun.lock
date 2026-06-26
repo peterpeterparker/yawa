@@ -16,7 +16,7 @@
     },
     "packages/app": {
       "name": "yawa-app",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "dependencies": {
         "@hono/mcp": "^0.3.0",
         "@hono/zod-validator": "^0.8.0",
@@ -35,7 +35,7 @@
     },
     "packages/cli": {
       "name": "yawa-cli",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
@@ -57,18 +57,16 @@
     },
     "packages/docs": {
       "name": "yawa-docs",
-      "version": "0.0.1",
+      "version": "0.0.5",
       "dependencies": {
         "@astrojs/starlight": "^0.39.2",
         "@fontsource-variable/nunito-sans": "^5.2.7",
         "astro": "^6.4.2",
-        "mime-types": "^3.0.2",
         "remark-gfm": "^4.0.1",
         "sharp": "^0.34.5",
       },
       "devDependencies": {
-        "@types/mime-types": "^3.0.1",
-        "kyushu-types": "^0.0.3",
+        "kyushu-types": "^0.1.0",
       },
     },
     "packages/schema": {
@@ -79,7 +77,7 @@
     },
     "packages/tracker": {
       "name": "yawa-tracker",
-      "version": "0.0.3",
+      "version": "0.0.5",
       "dependencies": {
         "web-vitals": "^5.3.0",
       },
@@ -442,8 +440,6 @@
 
     "@types/mdx": ["@types/mdx@2.0.14", "", {}, "sha512-T48PeuJtvLosNTPVhfnIp3i/n3a4g4Bad7YCq5k64D4u7NwDrAotikQ+5+sjtUvBmxCMlbo3dVL+C2dP0rWHzg=="],
 
-    "@types/mime-types": ["@types/mime-types@3.0.1", "", {}, "sha512-xRMsfuQbnRq1Ef+C+RKaENOxXX87Ygl38W1vDfPHRku02TgQr+Qd8iivLtAMcR0KF5/29xlnFihkTlbqFrGOVQ=="],
-
     "@types/ms": ["@types/ms@2.1.0", "", {}, "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="],
 
     "@types/nlcst": ["@types/nlcst@2.0.3", "", { "dependencies": { "@types/unist": "*" } }, "sha512-vSYNSDe6Ix3q+6Z7ri9lyWqgGhJTmzRjZRqyq15N0Z/1/UnVsno9G/N40NBijoYx2seFDIl0+B2mgAb9mezUCA=="],
@@ -788,7 +784,7 @@
 
     "klona": ["klona@2.0.6", "", {}, "sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA=="],
 
-    "kyushu-types": ["kyushu-types@0.0.3", "", { "dependencies": { "zod": "^4" } }, "sha512-wrUZ4nM8kgx7hfNOM0rrAMKfBmO3AgJ8sqvpaEHz2C7ZIPHfR4pAB19cVlT2DHeNs0USqymIuQtoB4uelTmb7A=="],
+    "kyushu-types": ["kyushu-types@0.1.0", "", { "dependencies": { "zod": "^4" } }, "sha512-/WlDcEtBJotLhOtT5oP+kz4BJIx6eohNQkrH5aYoivkVDqppyLr9KUjT81kF+Zc6IFhRZaI0ucZ11P50RYOT3Q=="],
 
     "longest-streak": ["longest-streak@3.1.0", "", {}, "sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g=="],
 

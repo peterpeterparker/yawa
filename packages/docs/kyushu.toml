@@ -4,6 +4,5 @@ src = "src/server.ts"
 [run]
 port = 5989
 
-[[worker.mounts]]
-host = "dist"
-guest = "/dist"
+[assets]
+dir = "dist"

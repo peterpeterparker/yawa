@@ -28,7 +28,6 @@ RUN cd packages/docs && kyu build kyushu.toml
 RUN mkdir -p /out/worker && \
     cp packages/docs/worker/__kyushu_worker.wasm /out/worker/ && \
     cp packages/docs/kyushu.toml /out/ && \
-    cp -r packages/docs/dist /out/dist && \
     tar -czf /docs.tar.gz -C /out .
 
 FROM scratch AS export
