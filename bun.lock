@@ -57,7 +57,7 @@
     },
     "packages/docs": {
       "name": "yawa-docs",
-      "version": "0.0.5",
+      "version": "0.0.8",
       "dependencies": {
         "@astrojs/starlight": "^0.39.2",
         "@fontsource-variable/nunito-sans": "^5.2.7",
@@ -66,7 +66,7 @@
         "sharp": "^0.34.5",
       },
       "devDependencies": {
-        "kyushu-types": "^0.1.0",
+        "kyushu-types": "^0.1.1",
       },
     },
     "packages/schema": {
@@ -784,7 +784,7 @@
 
     "klona": ["klona@2.0.6", "", {}, "sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA=="],
 
-    "kyushu-types": ["kyushu-types@0.1.0", "", { "dependencies": { "zod": "^4" } }, "sha512-/WlDcEtBJotLhOtT5oP+kz4BJIx6eohNQkrH5aYoivkVDqppyLr9KUjT81kF+Zc6IFhRZaI0ucZ11P50RYOT3Q=="],
+    "kyushu-types": ["kyushu-types@0.1.1", "", { "dependencies": { "zod": "^4" } }, "sha512-98t8Pme0BeiJIg/2vDj4PCgzKSdlkdWTIiTXFcAIjyWAw6bYh9o02Gyogr8VOs4X8AjNlB0DIQgTJRj0FXzeKw=="],
 
     "longest-streak": ["longest-streak@3.1.0", "", {}, "sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g=="],
 

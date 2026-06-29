@@ -6,3 +6,6 @@ port = 5989
 
 [assets]
 dir = "dist"
+
+[scripts]
+prebuild = "bun run build"
