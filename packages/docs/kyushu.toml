@@ -8,4 +8,4 @@ port = 5989
 dir = "dist"
 
 [scripts]
-prebuild = "bun run build"
+prebuild = ["bun run build"]
