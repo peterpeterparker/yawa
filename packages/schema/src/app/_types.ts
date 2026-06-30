@@ -8,7 +8,7 @@ interface Internal {
   };
   Site: {
     CreateSiteRequest: z.infer<typeof InternalSchema.Site.CreateSiteRequestSchema>;
-    CreateSiteRResponse: z.infer<typeof InternalSchema.Site.CreateSiteResponseSchema>;
+    CreateSiteResponse: z.infer<typeof InternalSchema.Site.CreateSiteResponseSchema>;
   };
 }
 
