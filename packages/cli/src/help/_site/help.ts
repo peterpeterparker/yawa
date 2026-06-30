@@ -6,6 +6,7 @@ import {
   SITE_DESCRIPTION,
   SITE_LIST_DESCRIPTION,
   SITE_UPDATE_DESCRIPTION,
+  SITE_LINK_DESCRIPTION,
 } from "../../_constants";
 import { log } from "../../utils/log";
 
@@ -13,6 +14,7 @@ const usage = `Usage: ${lime("yawa")} ${cyan("site")} ${magenta("<subcommand>")}
 
 Commands:
   ${cyan("create")}               ${SITE_CREATE_DESCRIPTION}
+  ${cyan("link")}                 ${SITE_LINK_DESCRIPTION}
   ${cyan("list")}                 ${SITE_LIST_DESCRIPTION}
   ${cyan("update")}               ${SITE_UPDATE_DESCRIPTION}
   

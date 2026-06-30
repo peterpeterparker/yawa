@@ -4,7 +4,12 @@ import { zValidator } from "@hono/zod-validator";
 import { defineCreateToken, defineDisableToken, defineListTokens } from "./_tokens";
 import { InternalSchema } from "yawa-schema/app";
 import { loadDbMiddleware } from "../middlewares/db";
-import { defineCreateSite, defineListSites, defineUpdateSiteStatus } from "./_sites";
+import {
+  defineCreateSite,
+  defineLinkSite,
+  defineListSites,
+  defineUpdateSiteStatus,
+} from "./_sites";
 
 export const defineInternal: DefineApi = ({ db }) => {
   const app = new Hono();
@@ -29,6 +34,11 @@ export const defineInternal: DefineApi = ({ db }) => {
     "/sites/:id",
     zValidator("json", InternalSchema.Site.UpdateSiteStatusRequestSchema),
     defineUpdateSiteStatus,
+  );
+  app.post(
+    "/sites/:id/link",
+    zValidator("json", InternalSchema.Site.LinkSiteRequestSchema),
+    defineLinkSite,
   );
 
   return {

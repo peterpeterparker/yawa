@@ -6,6 +6,8 @@ import { sitesList } from "./_site/list";
 import { logHelpSiteList } from "../help/_site/list.help";
 import { siteUpdate } from "./_site/update";
 import { logHelpSiteUpdate } from "../help/_site/update.help";
+import { siteLink } from "./_site/link";
+import { logHelpSiteLink } from "../help/_site/link.help";
 
 export const site = async (args?: string[]) => {
   const [subCommand] = args ?? [];
@@ -13,6 +15,10 @@ export const site = async (args?: string[]) => {
   switch (subCommand) {
     case "create":
       await siteCreate(args);
+      break;
+
+    case "link":
+      await siteLink(args);
       break;
 
     case "list":
@@ -35,6 +41,10 @@ export const helpSite = (args?: string[]) => {
   switch (subCommand) {
     case "create":
       logHelpSiteCreate();
+      break;
+
+    case "link":
+      logHelpSiteLink();
       break;
 
     case "list":

@@ -1,6 +1,6 @@
 import type { DefineHandler } from "../types/api";
 import { InternalSchema } from "yawa-schema/app";
-import { DbSites } from "yawa-db";
+import { DbLinkedSites, DbSites } from "yawa-db";
 import { isEmptyString } from "yawa-common";
 
 export const defineCreateSite: DefineHandler<
@@ -74,4 +74,36 @@ export const defineListSites: DefineHandler<never> = async (context) => {
   const { result: sites } = result;
 
   return context.json({ sites });
+};
+
+export const defineLinkSite: DefineHandler<
+  typeof InternalSchema.Site.LinkSiteRequestSchema
+> = async (context) => {
+  const {
+    req,
+    var: {
+      db: { connection },
+    },
+  } = context;
+
+  const id = req.param("id");
+
+  if (isEmptyString(id)) {
+    return context.json({ error: "Bad Request" }, 400);
+  }
+
+  const { hostname } = req.valid("json");
+
+  const result = await DbLinkedSites.create({ connection }).insert({ site_id: id, hostname });
+
+  if (result.status === "error") {
+    console.error(result.err);
+    return context.json({ error: "Failed to link hostname" }, 500);
+  }
+
+  const {
+    result: { id: linkedId },
+  } = result;
+
+  return context.json({ id: linkedId }, 201);
 };
