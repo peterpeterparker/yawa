@@ -8,6 +8,7 @@ import {
   defineCreateSite,
   defineListSites,
   defineUpdateSiteStatus,
+  defineLinkSite,
 } from "../../src/internal/_sites";
 
 let instance: DbInstance;
@@ -32,6 +33,11 @@ const makeApp = (instance: DbInstance) => {
     "/sites/:id",
     zValidator("json", InternalSchema.Site.UpdateSiteStatusRequestSchema),
     defineUpdateSiteStatus,
+  );
+  app.post(
+    "/sites/:id/link",
+    zValidator("json", InternalSchema.Site.LinkSiteRequestSchema),
+    defineLinkSite,
   );
 
   return app;
@@ -142,6 +148,84 @@ describe("defineUpdateSiteStatus", () => {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "not-a-status" }),
+    });
+
+    expect(res.status).toBe(400);
+  });
+});
+
+describe("defineLinkSite", () => {
+  beforeEach(async () => {
+    instance = await __createDbInstanceForTest__();
+  });
+
+  afterEach(async () => {
+    await instance.close();
+  });
+
+  test("returns 201 and links a hostname to a site", async () => {
+    const connectionResult = await instance.connect();
+    if (connectionResult.status === "error") throw new Error();
+
+    const insertResult = await DbSites.create({ connection: connectionResult.result }).insert({
+      hostname: "example.com",
+    });
+    if (insertResult.status === "error") throw new Error();
+
+    const { id } = insertResult.result;
+
+    const app = makeApp(instance);
+    const res = await app.request(`/sites/${id}/link`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hostname: "www.example.com" }),
+    });
+
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as { id: string };
+    expect(body.id).toBeDefined();
+  });
+
+  test("linked hostname resolves to the parent site", async () => {
+    const connectionResult = await instance.connect();
+    if (connectionResult.status === "error") throw new Error();
+
+    const sites = DbSites.create({ connection: connectionResult.result });
+    const insertResult = await sites.insert({ hostname: "example.com" });
+    if (insertResult.status === "error") throw new Error();
+
+    const { id } = insertResult.result;
+
+    const app = makeApp(instance);
+    await app.request(`/sites/${id}/link`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hostname: "www.example.com" }),
+    });
+
+    const findResult = await sites.findActiveByLinkedHostname({ hostname: "www.example.com" });
+    if (findResult.status === "error") throw new Error();
+
+    expect(findResult.result?.id).toBe(id);
+    expect(findResult.result?.hostname).toBe("example.com");
+  });
+
+  test("returns 400 for missing hostname", async () => {
+    const connectionResult = await instance.connect();
+    if (connectionResult.status === "error") throw new Error();
+
+    const insertResult = await DbSites.create({ connection: connectionResult.result }).insert({
+      hostname: "example.com",
+    });
+    if (insertResult.status === "error") throw new Error();
+
+    const { id } = insertResult.result;
+
+    const app = makeApp(instance);
+    const res = await app.request(`/sites/${id}/link`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
     });
 
     expect(res.status).toBe(400);

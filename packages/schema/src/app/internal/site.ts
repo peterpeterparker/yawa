@@ -22,3 +22,14 @@ export const UpdateSiteStatusRequestCodec = z.codec(UpdateSiteStatusRequestSchem
 export const ListSitesResponseSchema = z.strictObject({
   sites: z.array(AnalyticsSchema.SiteMetadataSchema),
 });
+
+export const LinkSiteRequestSchema = AnalyticsSchema.LinkedSiteSchema.pick({
+  hostname: true,
+});
+
+export const LinkSiteRequestCodec = z.codec(LinkSiteRequestSchema, z.string(), {
+  decode: (args) => JSON.stringify(args),
+  encode: (json) => JSON.parse(json),
+});
+
+export const LinkSiteResponseSchema = AnalyticsSchema.LinkedSiteSchema.pick({ id: true });
