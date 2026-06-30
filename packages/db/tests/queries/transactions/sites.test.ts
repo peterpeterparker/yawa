@@ -324,4 +324,88 @@ describe("DbSites", () => {
       expect(result.status).toBe("success");
     });
   });
+
+  describe("findById", () => {
+    test("returns site regardless of status", async () => {
+      const insertResult = await queries.insert({ hostname: "example.com" });
+
+      expect(insertResult.status).toBe("success");
+      if (insertResult.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      const { id } = insertResult.result;
+
+      await queries.updateStatus({ id, status: "disabled" });
+
+      const result = await queries.findById({ id });
+
+      expect(result.status).toBe("success");
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result?.id).toBe(id);
+      expect(result.result?.hostname).toBe("example.com");
+      expect(result.result?.status).toBe("disabled");
+    });
+
+    test("returns undefined when not found", async () => {
+      const result = await queries.findById({ id: "01912d4e-1234-7000-8000-000000000000" });
+
+      expect(result.status).toBe("success");
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result).toBeUndefined();
+    });
+  });
+
+  describe("findByHostname", () => {
+    test("returns site regardless of status", async () => {
+      const insertResult = await queries.insert({ hostname: "example.com" });
+
+      expect(insertResult.status).toBe("success");
+      if (insertResult.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      const { id } = insertResult.result;
+
+      await queries.updateStatus({ id, status: "disabled" });
+
+      const result = await queries.findByHostname({ hostname: "example.com" });
+
+      expect(result.status).toBe("success");
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result?.id).toBe(id);
+      expect(result.result?.hostname).toBe("example.com");
+      expect(result.result?.status).toBe("disabled");
+    });
+
+    test("returns undefined when not found", async () => {
+      const result = await queries.findByHostname({ hostname: "nonexistent.com" });
+
+      expect(result.status).toBe("success");
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result).toBeUndefined();
+    });
+  });
 });
