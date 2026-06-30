@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, afterEach } from "bun:test";
 import { Hono } from "hono";
 import { __createDbInstanceForTest__, DbInstance } from "yawa-db";
-import { DbSites, DbAdditionalSites } from "yawa-db";
+import { DbSites, DbLinkedSites } from "yawa-db";
 import { loadSiteMiddleware } from "../../../src/app/middlewares/site";
 import type { AnalyticsApiEnv } from "../../../src/app/types/api";
 
@@ -57,7 +57,7 @@ describe("loadSiteMiddleware", () => {
       throw new Error("Setup failed");
     }
 
-    await DbAdditionalSites.create({ connection: connectionResult.result }).insert({
+    await DbLinkedSites.create({ connection: connectionResult.result }).insert({
       site_id: siteResult.result.id,
       hostname: "www.example.com",
     });

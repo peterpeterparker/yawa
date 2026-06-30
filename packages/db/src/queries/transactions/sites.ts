@@ -36,12 +36,12 @@ export class DbSites {
     });
   }
 
-  async findActiveByAdditionalHostname({
+  async findActiveLinkedSiteByHostname({
     hostname,
-  }: Pick<Analytics["AdditionalSite"], "hostname">): Promise<Result<Option<Analytics["Site"]>>> {
+  }: Pick<Analytics["LinkedSite"], "hostname">): Promise<Result<Option<Analytics["Site"]>>> {
     return this.#connection.queryOne({
       sql: `SELECT s.* FROM yawa_analytics.sites s
-                  JOIN yawa_analytics.additional_sites a ON a.site_id = s.id
+                  JOIN yawa_analytics.linked_sites a ON a.site_id = s.id
                   WHERE a.hostname = $hostname AND s.status = 'active'`,
       schema: AnalyticsSchema.SiteSchema,
       values: { hostname },

@@ -62,7 +62,7 @@ describe("migrate", () => {
     expect(applied.result[1]?.id).toBeDefined();
     expect(applied.result[1]?.executed_at).toBeDefined();
 
-    expect(applied.result[2]?.filename).toBe("0003_additional_sites.sql");
+    expect(applied.result[2]?.filename).toBe("0003_linked_sites.sql");
     expect(applied.result[2]?.id).toBeDefined();
     expect(applied.result[2]?.executed_at).toBeDefined();
   });

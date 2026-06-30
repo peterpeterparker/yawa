@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS yawa_analytics.additional_sites (
+CREATE TABLE IF NOT EXISTS yawa_analytics.linked_sites (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     site_id UUID NOT NULL REFERENCES yawa_analytics.sites(id),
     hostname VARCHAR NOT NULL UNIQUE,

@@ -123,11 +123,11 @@ describe("DbSites", () => {
       }
 
       await connectionResult.result.run({
-        sql: `INSERT INTO yawa_analytics.additional_sites (site_id, hostname) VALUES ($site_id, $hostname)`,
+        sql: `INSERT INTO yawa_analytics.linked_sites (site_id, hostname) VALUES ($site_id, $hostname)`,
         values: { site_id, hostname: "www.example.com" },
       });
 
-      const result = await queries.findActiveByAdditionalHostname({ hostname: "www.example.com" });
+      const result = await queries.findActiveLinkedSiteByHostname({ hostname: "www.example.com" });
 
       expect(result.status).toBe("success");
 
@@ -142,7 +142,7 @@ describe("DbSites", () => {
     });
 
     test("returns undefined when additional hostname not found", async () => {
-      const result = await queries.findActiveByAdditionalHostname({ hostname: "nonexistent.com" });
+      const result = await queries.findActiveLinkedSiteByHostname({ hostname: "nonexistent.com" });
 
       expect(result.status).toBe("success");
 
@@ -172,13 +172,13 @@ describe("DbSites", () => {
       }
 
       await connectionResult.result.run({
-        sql: `INSERT INTO yawa_analytics.additional_sites (site_id, hostname) VALUES ($site_id, $hostname)`,
+        sql: `INSERT INTO yawa_analytics.linked_sites (site_id, hostname) VALUES ($site_id, $hostname)`,
         values: { site_id, hostname: "www.example.com" },
       });
 
       await queries.updateStatus({ id: site_id, status: "disabled" });
 
-      const result = await queries.findActiveByAdditionalHostname({ hostname: "www.example.com" });
+      const result = await queries.findActiveLinkedSiteByHostname({ hostname: "www.example.com" });
 
       expect(result.status).toBe("success");
 

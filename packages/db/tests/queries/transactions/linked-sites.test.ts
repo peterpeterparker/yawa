@@ -1,12 +1,12 @@
 import { beforeEach, afterEach, describe, expect, test } from "bun:test";
 import { DbInstance } from "../../../src";
 import { DbSites } from "../../../src/queries/transactions/sites";
-import { DbAdditionalSites } from "../../../src/queries/transactions/additional-sites";
+import { DbLinkedSites } from "../../../src/queries/transactions/linked-sites";
 import { migrate } from "../../../src/migrate";
 
-describe("DbAdditionalSites", () => {
+describe("DbLinkedSites", () => {
   let instance: DbInstance;
-  let queries: DbAdditionalSites;
+  let queries: DbLinkedSites;
   let sites: DbSites;
 
   beforeEach(async () => {
@@ -20,7 +20,7 @@ describe("DbAdditionalSites", () => {
       return;
     }
 
-    queries = DbAdditionalSites.create({ connection: connectionResult.result });
+    queries = DbLinkedSites.create({ connection: connectionResult.result });
     sites = DbSites.create({ connection: connectionResult.result });
   });
 

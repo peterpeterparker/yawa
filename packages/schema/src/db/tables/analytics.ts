@@ -11,7 +11,7 @@ export const SiteSchema = z.strictObject({
   updated_at: TimestampSchema,
 });
 
-export const AdditionalSiteSchema = z.strictObject({
+export const LinkedSiteSchema = z.strictObject({
   site_id: IdSchema,
   ...SiteSchema.omit({ status: true }).shape,
 });
