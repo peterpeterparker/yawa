@@ -75,40 +75,40 @@ Run the server on any VPS or locally if you just want to give it a spin.
 
 7.  **Connect your MCP client**
 
-        Connect for example Claude Code using the token created above:
+    Connect for example Claude Code using the token created above:
 
-        ```bash
-        claude mcp add yawa https://your-server.com/mcp --transport http \
-            --header "Authorization: Bearer YOUR_TOKEN"
-        ```
+    ```bash
+    claude mcp add yawa https://your-server.com/mcp --transport http \
+        --header "Authorization: Bearer YOUR_TOKEN"
+    ```
 
-        Then start asking questions :)
+    Then start asking questions :)
 
-        ```
-        ❯ list my analytics sites
+    ```
+    ❯ list my analytics sites
 
-        You have one registered site:
+    You have one registered site:
 
-        ┌──────────────────────────────────────┬────────────────┬────────┐
-        │                  ID                  │    Hostname    │ Status │
-        ├──────────────────────────────────────┼────────────────┼────────┤
-        │ 019ed922-33e5-7b9e-a072-963680861c6f │ yourdomain.com │ active │
-        └──────────────────────────────────────┴────────────────┴────────┘
+    ┌──────────────────────────────────────┬────────────────┬────────┐
+    │                  ID                  │    Hostname    │ Status │
+    ├──────────────────────────────────────┼────────────────┼────────┤
+    │ 019ed922-33e5-7b9e-a072-963680861c6f │ yourdomain.com │ active │
+    └──────────────────────────────────────┴────────────────┴────────┘
 
-        ❯ what are my top pages this week?
+    ❯ what are my top pages this week?
 
-        Top pages this week (Jun 15–18):
+    Top pages this week (Jun 15–18):
 
-        ┌───────────────────┬──────────┬───────────┐
-        │       Page        │ Visitors │ Pageviews │
-        ├───────────────────┼──────────┼───────────┤
-        │ / (homepage)      │ 312      │ 489       │
-        │ /blog             │ 201      │ 334       │
-        │ /about            │ 98       │ 121       │
-        │ /blog/hello-world │ 87       │ 103       │
-        └───────────────────┴──────────┴───────────┘
+    ┌───────────────────┬──────────┬───────────┐
+    │       Page        │ Visitors │ Pageviews │
+    ├───────────────────┼──────────┼───────────┤
+    │ / (homepage)      │ 312      │ 489       │
+    │ /blog             │ 201      │ 334       │
+    │ /about            │ 98       │ 121       │
+    │ /blog/hello-world │ 87       │ 103       │
+    └───────────────────┴──────────┴───────────┘
 
-        Your homepage leads, with the blog close behind.
-        ```
+    Your homepage leads, with the blog close behind.
+    ```
 
 </Steps>
