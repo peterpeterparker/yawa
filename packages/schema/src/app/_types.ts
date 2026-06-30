@@ -1,5 +1,6 @@
 import type { InternalSchema, CommonSchema, AppSchema } from "./_schemas";
 import type { z } from "zod";
+import { ListLinkedSitesResponseSchema } from "./internal/site";
 
 interface Internal {
   Token: {
@@ -9,6 +10,8 @@ interface Internal {
   Site: {
     CreateSiteRequest: z.infer<typeof InternalSchema.Site.CreateSiteRequestSchema>;
     CreateSiteResponse: z.infer<typeof InternalSchema.Site.CreateSiteResponseSchema>;
+    ListSitesResponse: z.infer<typeof InternalSchema.Site.ListSitesResponseSchema>;
+    ListLinkedSitesResponse: z.infer<typeof InternalSchema.Site.ListLinkedSitesResponseSchema>;
   };
 }
 

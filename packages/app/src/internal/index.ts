@@ -10,6 +10,7 @@ import {
   defineListSites,
   defineUpdateSiteStatus,
 } from "./_sites";
+import { defineListLinkedSites } from "./_linked-sites";
 
 export const defineInternal: DefineApi = ({ db }) => {
   const app = new Hono();
@@ -30,6 +31,7 @@ export const defineInternal: DefineApi = ({ db }) => {
     defineCreateSite,
   );
   app.get("/sites", defineListSites);
+  app.get("/sites/linked", defineListLinkedSites);
   app.patch(
     "/sites/:id",
     zValidator("json", InternalSchema.Site.UpdateSiteStatusRequestSchema),

@@ -25,4 +25,11 @@ export class DbLinkedSites {
       schema: AnalyticsSchema.LinkedSiteSchema.pick({ id: true }),
     });
   }
+
+  async findAll(): Promise<Result<Analytics["LinkedSite"][]>> {
+    return this.#connection.query({
+      sql: `SELECT * FROM yawa_analytics.linked_sites ORDER BY hostname`,
+      schema: AnalyticsSchema.LinkedSiteSchema,
+    });
+  }
 }

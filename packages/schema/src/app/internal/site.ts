@@ -23,6 +23,10 @@ export const ListSitesResponseSchema = z.strictObject({
   sites: z.array(AnalyticsSchema.SiteMetadataSchema),
 });
 
+export const ListLinkedSitesResponseSchema = z.strictObject({
+  linkedSites: z.array(AnalyticsSchema.LinkedSiteSchema),
+});
+
 export const LinkSiteRequestSchema = AnalyticsSchema.LinkedSiteSchema.pick({
   hostname: true,
 });
