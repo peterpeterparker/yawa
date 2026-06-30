@@ -3,7 +3,7 @@ import type { Option, Result } from "yawa-common";
 import { type Analytics, AnalyticsSchema } from "yawa-schema/db";
 import * as z from "zod";
 
-export const LitSitesSchema = z.array(AnalyticsSchema.SiteMetadataSchema);
+export const ListSitesSchema = z.array(AnalyticsSchema.SiteMetadataSchema);
 
 export class DbSites {
   #connection: DbConnection;
@@ -48,7 +48,7 @@ export class DbSites {
     });
   }
 
-  async findAll(): Promise<Result<z.infer<typeof LitSitesSchema>>> {
+  async findAll(): Promise<Result<z.infer<typeof ListSitesSchema>>> {
     return this.#connection.query({
       sql: `SELECT id, hostname, status FROM yawa_analytics.sites ORDER BY hostname`,
       schema: AnalyticsSchema.SiteMetadataSchema,

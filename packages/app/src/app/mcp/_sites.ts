@@ -1,4 +1,4 @@
-import { DbSites, LitSitesSchema } from "yawa-db";
+import { DbSites, ListSitesSchema } from "yawa-db";
 import { McpTools, type McpToolsInitArgs } from "./_tools";
 import * as z from "zod";
 
@@ -24,7 +24,7 @@ export class McpToolsSites extends McpTools {
       description:
         "Returns all registered sites with their ID and hostname. Use this to discover available site IDs before querying analytics.",
       inputSchema: z.strictObject({}),
-      outputSchema: LitSitesSchema,
+      outputSchema: ListSitesSchema,
       fn: async () => {
         return await this.#sites.findAll();
       },
