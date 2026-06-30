@@ -13,11 +13,12 @@ docker exec -it <container-name> ./cli <command>
 
 Manage the sites yawa collects analytics for.
 
-| Subcommand | Description                     |
-| ---------- | ------------------------------- |
-| `create`   | Register a new site by hostname |
-| `list`     | List all registered sites       |
-| `update`   | Update the status of a site     |
+| Subcommand | Description                                     |
+| ---------- | ----------------------------------------------- |
+| `create`   | Register a new site by hostname                 |
+| `link`     | Link an additional hostname to an existing site |
+| `list`     | List all registered sites                       |
+| `update`   | Update the status of a site                     |
 
 ### site create
 
@@ -28,6 +29,19 @@ Manage the sites yawa collects analytics for.
 | Option       | Description                               |
 | ------------ | ----------------------------------------- |
 | `--hostname` | Hostname to register (e.g. "example.com") |
+
+### site link
+
+If your site is reachable on more than one hostname (for example a `yourdomain.com` and its `www.yourdomain.com` subdomain), link the extra hostname to your site so it can be tracked.
+
+```bash
+./cli site link --id <site-id> --hostname www.example.com
+```
+
+| Option       | Description                                          |
+| ------------ | ---------------------------------------------------- |
+| `--id`       | Site ID to link the hostname to                      |
+| `--hostname` | Additional hostname to link (e.g. "www.example.com") |
 
 ### site list
 
