@@ -11,6 +11,11 @@ export const SiteSchema = z.strictObject({
   updated_at: TimestampSchema,
 });
 
+export const LinkedSiteSchema = z.strictObject({
+  site_id: IdSchema,
+  ...SiteSchema.omit({ status: true }).shape,
+});
+
 export const SiteMetadataSchema = SiteSchema.pick({ id: true, hostname: true, status: true });
 
 export const SessionIdSchema = z.uuid();

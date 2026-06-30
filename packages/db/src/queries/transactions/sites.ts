@@ -36,6 +36,18 @@ export class DbSites {
     });
   }
 
+  async findActiveByLinkedHostname({
+    hostname,
+  }: Pick<Analytics["LinkedSite"], "hostname">): Promise<Result<Option<Analytics["Site"]>>> {
+    return this.#connection.queryOne({
+      sql: `SELECT s.* FROM yawa_analytics.sites s
+                  JOIN yawa_analytics.linked_sites a ON a.site_id = s.id
+                  WHERE a.hostname = $hostname AND s.status = 'active'`,
+      schema: AnalyticsSchema.SiteSchema,
+      values: { hostname },
+    });
+  }
+
   async findAll(): Promise<Result<z.infer<typeof LitSitesSchema>>> {
     return this.#connection.query({
       sql: `SELECT id, hostname, status FROM yawa_analytics.sites ORDER BY hostname`,

@@ -52,12 +52,18 @@ describe("migrate", () => {
       return;
     }
 
-    expect(applied.result.length).toBe(2);
+    expect(applied.result.length).toBe(3);
+
     expect(applied.result[0]?.filename).toBe("0001_admin.sql");
     expect(applied.result[0]?.id).toBeDefined();
     expect(applied.result[0]?.executed_at).toBeDefined();
+
     expect(applied.result[1]?.filename).toBe("0002_analytics.sql");
     expect(applied.result[1]?.id).toBeDefined();
     expect(applied.result[1]?.executed_at).toBeDefined();
+
+    expect(applied.result[2]?.filename).toBe("0003_linked_sites.sql");
+    expect(applied.result[2]?.id).toBeDefined();
+    expect(applied.result[2]?.executed_at).toBeDefined();
   });
 });

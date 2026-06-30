@@ -16,6 +16,7 @@ interface Common {
 
 interface Analytics {
   Site: z.infer<typeof AnalyticsSchema.SiteSchema>;
+  LinkedSite: z.infer<typeof AnalyticsSchema.LinkedSiteSchema>;
   SessionId: z.infer<typeof AnalyticsSchema.SessionIdSchema>;
   PageView: z.infer<typeof AnalyticsSchema.PageViewSchema>;
   TrackEvent: z.infer<typeof AnalyticsSchema.TrackEventSchema>;

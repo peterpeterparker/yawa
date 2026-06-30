@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, afterEach } from "bun:test";
 import { Hono } from "hono";
 import { __createDbInstanceForTest__, DbInstance } from "yawa-db";
-import { DbSites } from "yawa-db";
+import { DbSites, DbLinkedSites } from "yawa-db";
 import { loadSiteMiddleware } from "../../../src/app/middlewares/site";
 import type { AnalyticsApiEnv } from "../../../src/app/types/api";
 
@@ -41,6 +41,32 @@ describe("loadSiteMiddleware", () => {
     const res = await app.request("/test", {
       headers: { origin: "https://example.com" },
     });
+    expect(res.status).toBe(200);
+    const { hostname } = (await res.json()) as { hostname: string };
+    expect(hostname).toBe("example.com");
+  });
+
+  test("sets site in context for registered additional hostname", async () => {
+    const connectionResult = await instance.connect();
+    if (connectionResult.status === "error") throw new Error("DB connect failed");
+
+    const sites = DbSites.create({ connection: connectionResult.result });
+    const siteResult = await sites.findActiveByHostname({ hostname: "example.com" });
+
+    if (siteResult.status === "error" || !siteResult.result) {
+      throw new Error("Setup failed");
+    }
+
+    await DbLinkedSites.create({ connection: connectionResult.result }).insert({
+      site_id: siteResult.result.id,
+      hostname: "www.example.com",
+    });
+
+    const app = makeApp(instance);
+    const res = await app.request("/test", {
+      headers: { origin: "https://www.example.com" },
+    });
+
     expect(res.status).toBe(200);
     const { hostname } = (await res.json()) as { hostname: string };
     expect(hostname).toBe("example.com");
