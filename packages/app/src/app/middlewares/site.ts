@@ -41,7 +41,7 @@ export const loadSiteMiddleware = createMiddleware<AnalyticsApiEnv>(async (conte
       return result;
     }
 
-    return await dbSites.findActiveLinkedSiteByHostname({ hostname });
+    return await dbSites.findActiveByLinkedHostname({ hostname });
   };
 
   const result = await loadSite();

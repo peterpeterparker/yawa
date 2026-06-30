@@ -36,7 +36,7 @@ export class DbSites {
     });
   }
 
-  async findActiveLinkedSiteByHostname({
+  async findActiveByLinkedHostname({
     hostname,
   }: Pick<Analytics["LinkedSite"], "hostname">): Promise<Result<Option<Analytics["Site"]>>> {
     return this.#connection.queryOne({

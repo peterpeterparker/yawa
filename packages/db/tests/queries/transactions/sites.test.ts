@@ -104,7 +104,7 @@ describe("DbSites", () => {
     });
   });
 
-  describe("findActiveByAdditionalHostname", () => {
+  describe("findActiveByLinkedHostname", () => {
     test("returns site when found and active", async () => {
       const insertResult = await queries.insert({ hostname: "example.com" });
 
@@ -127,7 +127,7 @@ describe("DbSites", () => {
         values: { site_id, hostname: "www.example.com" },
       });
 
-      const result = await queries.findActiveLinkedSiteByHostname({ hostname: "www.example.com" });
+      const result = await queries.findActiveByLinkedHostname({ hostname: "www.example.com" });
 
       expect(result.status).toBe("success");
 
@@ -142,7 +142,7 @@ describe("DbSites", () => {
     });
 
     test("returns undefined when additional hostname not found", async () => {
-      const result = await queries.findActiveLinkedSiteByHostname({ hostname: "nonexistent.com" });
+      const result = await queries.findActiveByLinkedHostname({ hostname: "nonexistent.com" });
 
       expect(result.status).toBe("success");
 
@@ -178,7 +178,7 @@ describe("DbSites", () => {
 
       await queries.updateStatus({ id: site_id, status: "disabled" });
 
-      const result = await queries.findActiveLinkedSiteByHostname({ hostname: "www.example.com" });
+      const result = await queries.findActiveByLinkedHostname({ hostname: "www.example.com" });
 
       expect(result.status).toBe("success");
 
