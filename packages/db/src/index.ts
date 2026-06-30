@@ -6,6 +6,7 @@ export * from "./db/connection";
 export * from "./open";
 export * from "./queries/transactions/access-tokens";
 export * from "./queries/transactions/sites";
+export * from "./queries/transactions/additional-sites";
 export * from "./queries/transactions/page-views";
 export * from "./queries/transactions/track-events";
 export * from "./queries/transactions/performance-metrics";

@@ -104,6 +104,93 @@ describe("DbSites", () => {
     });
   });
 
+  describe("findActiveByAdditionalHostname", () => {
+    test("returns site when found and active", async () => {
+      const insertResult = await queries.insert({ hostname: "example.com" });
+
+      expect(insertResult.status).toBe("success");
+      if (insertResult.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      const { id: site_id } = insertResult.result;
+
+      const connectionResult = await instance.connect();
+      if (connectionResult.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      await connectionResult.result.run({
+        sql: `INSERT INTO yawa_analytics.additional_sites (site_id, hostname) VALUES ($site_id, $hostname)`,
+        values: { site_id, hostname: "www.example.com" },
+      });
+
+      const result = await queries.findActiveByAdditionalHostname({ hostname: "www.example.com" });
+
+      expect(result.status).toBe("success");
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result?.hostname).toBe("example.com");
+      expect(result.result?.id).toBe(site_id);
+      expect(result.result?.status).toBe("active");
+    });
+
+    test("returns undefined when additional hostname not found", async () => {
+      const result = await queries.findActiveByAdditionalHostname({ hostname: "nonexistent.com" });
+
+      expect(result.status).toBe("success");
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result).toBeUndefined();
+    });
+
+    test("returns undefined when parent site is disabled", async () => {
+      const insertResult = await queries.insert({ hostname: "example.com" });
+
+      expect(insertResult.status).toBe("success");
+      if (insertResult.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      const { id: site_id } = insertResult.result;
+
+      const connectionResult = await instance.connect();
+      if (connectionResult.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      await connectionResult.result.run({
+        sql: `INSERT INTO yawa_analytics.additional_sites (site_id, hostname) VALUES ($site_id, $hostname)`,
+        values: { site_id, hostname: "www.example.com" },
+      });
+
+      await queries.updateStatus({ id: site_id, status: "disabled" });
+
+      const result = await queries.findActiveByAdditionalHostname({ hostname: "www.example.com" });
+
+      expect(result.status).toBe("success");
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result).toBeUndefined();
+    });
+  });
+
   describe("findAll", () => {
     test("returns empty array when no sites", async () => {
       const result = await queries.findAll();
