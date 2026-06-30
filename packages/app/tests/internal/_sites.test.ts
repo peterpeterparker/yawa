@@ -230,4 +230,38 @@ describe("defineLinkSite", () => {
 
     expect(res.status).toBe(400);
   });
+
+  test("returns 404 when site does not exist", async () => {
+    const app = makeApp(instance);
+    const res = await app.request("/sites/01912d4e-1234-7000-8000-000000000000/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hostname: "www.example.com" }),
+    });
+
+    expect(res.status).toBe(404);
+  });
+
+  test("returns 400 when hostname is already used as a site", async () => {
+    const connectionResult = await instance.connect();
+    if (connectionResult.status === "error") throw new Error();
+
+    const sites = DbSites.create({ connection: connectionResult.result });
+
+    const insertResult = await sites.insert({ hostname: "example.com" });
+    if (insertResult.status === "error") throw new Error();
+
+    const { id } = insertResult.result;
+
+    await sites.insert({ hostname: "other.com" });
+
+    const app = makeApp(instance);
+    const res = await app.request(`/sites/${id}/link`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hostname: "other.com" }),
+    });
+
+    expect(res.status).toBe(400);
+  });
 });

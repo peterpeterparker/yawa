@@ -64,4 +64,24 @@ export class DbSites {
       values: { id, status },
     });
   }
+
+  async findById({
+    id,
+  }: Pick<Analytics["Site"], "id">): Promise<Result<Option<Analytics["Site"]>>> {
+    return this.#connection.queryOne({
+      sql: `SELECT * FROM yawa_analytics.sites WHERE id = $id`,
+      schema: AnalyticsSchema.SiteSchema,
+      values: { id },
+    });
+  }
+
+  async findByHostname({
+    hostname,
+  }: Pick<Analytics["Site"], "hostname">): Promise<Result<Option<Analytics["Site"]>>> {
+    return this.#connection.queryOne({
+      sql: `SELECT * FROM yawa_analytics.sites WHERE hostname = $hostname`,
+      schema: AnalyticsSchema.SiteSchema,
+      values: { hostname },
+    });
+  }
 }

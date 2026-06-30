@@ -1,7 +1,7 @@
 import type { DefineHandler } from "../types/api";
 import { InternalSchema } from "yawa-schema/app";
 import { DbLinkedSites, DbSites } from "yawa-db";
-import { isEmptyString } from "yawa-common";
+import { isEmptyString, isNullish, nonNullish } from "yawa-common";
 
 export const defineCreateSite: DefineHandler<
   typeof InternalSchema.Site.CreateSiteRequestSchema
@@ -93,6 +93,34 @@ export const defineLinkSite: DefineHandler<
   }
 
   const { hostname } = req.valid("json");
+
+  const sites = DbSites.create({ connection });
+
+  const siteResult = await sites.findById({ id });
+
+  if (siteResult.status === "error") {
+    console.error(siteResult.err);
+    return context.json({ error: "Failed to find site" }, 500);
+  }
+
+  const { result: site } = siteResult;
+
+  if (isNullish(site)) {
+    return context.json({ error: "Site not found" }, 404);
+  }
+
+  const existingResult = await sites.findByHostname({ hostname });
+
+  if (existingResult.status === "error") {
+    console.error(existingResult.err);
+    return context.json({ error: "Failed to find site with hostname" }, 500);
+  }
+
+  const { result: existingSite } = existingResult;
+
+  if (nonNullish(existingSite)) {
+    return context.json({ error: "Hostname already in use as a site" }, 400);
+  }
 
   const result = await DbLinkedSites.create({ connection }).insert({ site_id: id, hostname });
 
