@@ -1,6 +1,5 @@
 import type { AdminSchema, SystemSchema, CommonSchema, AnalyticsSchema } from "./_schemas";
 import type { z } from "zod";
-import { AdditionalSiteSchema } from "./tables/analytics";
 
 interface Admin {
   AccessToken: z.infer<typeof AdminSchema.AccessTokenSchema>;
