@@ -35,6 +35,6 @@
     "test": "bun test"
   },
   "dependencies": {
-    "web-vitals": "^5.3.0"
+    "web-vitals": "^6.2.1"
   }
 }

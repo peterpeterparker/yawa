@@ -16,7 +16,7 @@
     },
     "packages/app": {
       "name": "yawa-app",
-      "version": "0.0.5",
+      "version": "0.0.7",
       "dependencies": {
         "@hono/mcp": "^0.3.0",
         "@hono/zod-validator": "^0.8.0",
@@ -35,7 +35,7 @@
     },
     "packages/cli": {
       "name": "yawa-cli",
-      "version": "0.0.2",
+      "version": "0.0.4",
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
@@ -57,7 +57,7 @@
     },
     "packages/docs": {
       "name": "yawa-docs",
-      "version": "0.0.8",
+      "version": "0.0.9",
       "dependencies": {
         "@astrojs/starlight": "^0.39.2",
         "@fontsource-variable/nunito-sans": "^5.2.7",
@@ -79,7 +79,7 @@
       "name": "yawa-tracker",
       "version": "0.0.5",
       "dependencies": {
-        "web-vitals": "^5.3.0",
+        "web-vitals": "^6.2.1",
       },
     },
   },
@@ -1198,7 +1198,7 @@
 
     "web-namespaces": ["web-namespaces@2.0.1", "", {}, "sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ=="],
 
-    "web-vitals": ["web-vitals@5.3.0", "", {}, "sha512-q6LWsLatGYZp5VGBIOvbTj6JBV2nOmC8KvWztXBmwJcfFAzhwKwbOxhUH306XY3CcaZDUlSmSuNPBsCn0bFu+g=="],
+    "web-vitals": ["web-vitals@6.2.1", "", {}, "sha512-rLcLXA2sx6+9dE88NHFubwTtGxpK4yYBLj6qHPdFoCaLr0cXGb4efOqtKLlm4loGA4OEKHIQKMKzZkKyOh5ctw=="],
 
     "which": ["which@2.0.2", "", { "dependencies": { "isexe": "^2.0.0" }, "bin": { "node-which": "./bin/node-which" } }, "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA=="],
 
