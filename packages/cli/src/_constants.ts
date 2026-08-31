@@ -1,7 +1,7 @@
 import { grey, yellow } from "./utils/colors";
 import { version } from "../package.json";
 
-export const TITLE_AND_VERSION = `Yawawa CLI ${grey(`v${version}`)}`;
+export const TITLE_AND_VERSION = `Yawa CLI ${grey(`v${version}`)}`;
 
 export const OPTION_HELP = `${yellow("-h, --help")}            Output usage information`;
 
