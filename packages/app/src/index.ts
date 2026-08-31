@@ -2,6 +2,10 @@ import { openDb } from "yawa-db";
 import { defineApp } from "./app";
 import { defineInternal } from "./internal";
 
+// Precompile Zod schemas to improve parsing schemas performance
+// Reference: https://zod.dev/blog/zod-4-5?id=zcompile#zcompile
+import "zod/compile";
+
 const dbResult = await openDb();
 
 if (dbResult.status === "error") {
