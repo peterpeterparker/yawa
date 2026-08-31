@@ -27,7 +27,7 @@
         "yawa-common": "workspace:*",
         "yawa-db": "workspace:*",
         "yawa-schema": "workspace:*",
-        "zod": "^4.4.3",
+        "zod": "^4.5.4",
       },
       "devDependencies": {
         "@types/ua-parser-js": "^0.7.39",
@@ -44,7 +44,7 @@
     "packages/common": {
       "name": "yawa-common",
       "dependencies": {
-        "zod": "^4.4.3",
+        "zod": "^4.5.4",
       },
     },
     "packages/db": {
@@ -52,7 +52,7 @@
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
-        "zod": "^4.4.3",
+        "zod": "^4.5.4",
       },
     },
     "packages/docs": {
@@ -72,7 +72,7 @@
     "packages/schema": {
       "name": "yawa-schema",
       "dependencies": {
-        "zod": "^4.4.3",
+        "zod": "^4.5.4",
       },
     },
     "packages/tracker": {
@@ -1226,7 +1226,7 @@
 
     "yocto-queue": ["yocto-queue@1.2.2", "", {}, "sha512-4LCcse/U2MHZ63HAJVE+v71o7yOdIe4cZ70Wpf8D/IyjDKYQLV5GD46B+hSTjJsvV5PztjvHoU580EftxjDZFQ=="],
 
-    "zod": ["zod@4.4.3", "", {}, "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="],
+    "zod": ["zod@4.5.4", "", {}, "sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA=="],
 
     "zod-to-json-schema": ["zod-to-json-schema@3.25.2", "", { "peerDependencies": { "zod": "^3.25.28 || ^4" } }, "sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA=="],
 
