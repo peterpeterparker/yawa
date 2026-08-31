@@ -7,5 +7,5 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "exclude": ["tests", "dist"]
+  "exclude": ["tests", "dist", "build.compress.ts"]
 }

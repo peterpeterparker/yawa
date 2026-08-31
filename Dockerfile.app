@@ -45,7 +45,6 @@ COPY package.json package.json
 COPY tsconfig.json tsconfig.json
 COPY bunfig.toml bunfig.toml
 COPY test-setup.ts test-setup.ts
-COPY build.compress.ts build.compress.ts
 
 COPY packages/app ./packages/app
 COPY packages/common ./packages/common
