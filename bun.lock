@@ -16,7 +16,7 @@
     },
     "packages/app": {
       "name": "yawa-app",
-      "version": "0.0.7",
+      "version": "0.0.9",
       "dependencies": {
         "@hono/mcp": "^0.3.2",
         "@hono/zod-validator": "^0.9.1",
@@ -35,7 +35,7 @@
     },
     "packages/cli": {
       "name": "yawa-cli",
-      "version": "0.0.4",
+      "version": "0.0.6",
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
@@ -77,7 +77,7 @@
     },
     "packages/tracker": {
       "name": "yawa-tracker",
-      "version": "0.0.5",
+      "version": "0.0.6",
       "dependencies": {
         "web-vitals": "^6.2.1",
       },
