@@ -52,7 +52,7 @@ describe("migrate", () => {
       return;
     }
 
-    expect(applied.result.length).toBe(3);
+    expect(applied.result.length).toBe(4);
 
     expect(applied.result[0]?.filename).toBe("0001_admin.sql");
     expect(applied.result[0]?.id).toBeDefined();
@@ -65,5 +65,46 @@ describe("migrate", () => {
     expect(applied.result[2]?.filename).toBe("0003_linked_sites.sql");
     expect(applied.result[2]?.id).toBeDefined();
     expect(applied.result[2]?.executed_at).toBeDefined();
+
+    expect(applied.result[3]?.filename).toBe("0004_web_vitals_soft_navigation.sql");
+    expect(applied.result[3]?.id).toBeDefined();
+    expect(applied.result[3]?.executed_at).toBeDefined();
+  });
+
+  describe("0004_web_vitals_soft_navigation", () => {
+    test("adds soft_navigation while preserving existing navigation types", async () => {
+      await migrate({ instance });
+
+      const connectionResult = await instance.connect();
+
+      if (connectionResult.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      const result = await connectionResult.result.query({
+        sql: `
+      SELECT enum_range(NULL::yawa_analytics.navigation_type) AS values
+    `,
+        schema: z.object({
+          values: z.array(z.string()),
+        }),
+      });
+
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result[0]?.values).toEqual([
+        "navigate",
+        "reload",
+        "back_forward",
+        "back_forward_cache",
+        "prerender",
+        "restore",
+        "soft_navigation",
+      ]);
+    });
   });
 });

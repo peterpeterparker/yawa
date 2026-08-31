@@ -92,6 +92,8 @@ export class PerformanceService {
           return "back_forward_cache";
         case "prerender":
           return "prerender";
+        case "soft-navigation":
+          return "soft_navigation";
         default:
           return undefined;
       }

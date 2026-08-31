@@ -57,6 +57,7 @@ describe("PerformanceService.mapPerformanceMetric", () => {
       ["back-forward", "back_forward"],
       ["back-forward-cache", "back_forward_cache"],
       ["prerender", "prerender"],
+      ["soft-navigation", "soft_navigation"],
     ] as const)("maps %s to %s", async (input, expected) => {
       let result: unknown;
 

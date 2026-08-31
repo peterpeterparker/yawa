@@ -42,7 +42,8 @@ export type NavigationType =
   | "back_forward"
   | "back_forward_cache"
   | "prerender"
-  | "restore";
+  | "restore"
+  | "soft_navigation";
 
 export interface SetPerformanceMetricRequest extends SetRequest {
   href: string;
