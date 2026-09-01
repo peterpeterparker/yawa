@@ -4,7 +4,9 @@ header.header a.site-title img {
 
 :root header {
   background: var(--sl-color-gray-6);
+}
 
+:root[data-has-hero] header {
   @media screen and (min-width: 1140px) {
     background: inherit;
   }
