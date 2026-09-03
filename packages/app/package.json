@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hono/mcp": "^0.3.2",
+    "@hono/swagger-ui": "^0.6.1",
+    "@hono/zod-openapi": "^1.6.2",
     "@hono/zod-validator": "^0.9.1",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "hono": "^4.13.5",

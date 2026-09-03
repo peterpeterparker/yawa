@@ -1,10 +1,39 @@
-import type { DefineHandler } from "../types/api";
-import { AppSchema } from "yawa-schema/app";
+import { AppSchema, CommonSchema } from "yawa-schema/app";
 import { DbTrackEvents } from "yawa-db";
 import type { AnalyticsSessionApiEnv } from "./types/api";
+import { createRoute } from "@hono/zod-openapi";
+import type { DefineZodHandler } from "../types/api";
 
-export const defineCreateTrackEvent: DefineHandler<
-  typeof AppSchema.Analytics.CreateTrackEventRequestSchema,
+export const trackEventRoute = createRoute({
+  method: "post",
+  path: "/track",
+  tags: ["Events"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: AppSchema.Analytics.CreateTrackEventRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    204: {
+      description: "Track event recorded successfully",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: CommonSchema.Error.ErrorSchema,
+        },
+      },
+      description: "Internal server error while saving to database",
+    },
+  },
+});
+
+export const defineCreateTrackEvent: DefineZodHandler<
+  typeof trackEventRoute,
   AnalyticsSessionApiEnv
 > = async (context) => {
   const {
