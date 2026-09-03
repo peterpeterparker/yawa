@@ -1,33 +1,44 @@
-import { Hono } from "hono";
-import type { DefineApi } from "../types/api";
+import type { ApiEnv, DefineApi } from "../types/api";
 import { loadDbMiddleware } from "../middlewares/db";
-import { zValidator } from "@hono/zod-validator";
-import { AppSchema } from "yawa-schema/app";
-import { defineCreatePageView } from "./_page-views";
+import { pageViewRoute, defineCreatePageView } from "./_page-views";
 import { loadSiteMiddleware } from "./middlewares/site";
 import { cors } from "hono/cors";
 import { extractIpMiddleware } from "./middlewares/ip";
 import { buildSessionIdMiddleware } from "./middlewares/session-id";
 import { assertAuthMiddleware } from "../middlewares/auth";
 import { defineMcp } from "./_mcp";
-import { defineCreateTrackEvent } from "./_track-events";
-import { defineCreatePerformanceMetric } from "./_performance-metrics";
-import { defineHealth } from "./_health";
+import { trackEventRoute, defineCreateTrackEvent } from "./_track-events";
+import { performanceMetricRoute, defineCreatePerformanceMetric } from "./_performance-metrics";
+import { defineHealth, healthRoute } from "./_health";
 import { defineTracker } from "./_tracker";
 import { serveStatic } from "hono/bun";
 import { join } from "node:path";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import type { AnalyticsSessionApiEnv } from "./types/api";
+import { version, name as title } from "../../package.json";
+import { swaggerUI } from "@hono/swagger-ui";
 
 export const defineApp: DefineApi = ({ db }) => {
-  const app = new Hono();
+  const app = new OpenAPIHono<ApiEnv>();
 
   app.use("*", loadDbMiddleware({ db }));
 
-  app.use(
-    "/events/*",
+  // Sub-app for events have a specific environment loaded with additional middlewares
+  const eventsApp = new OpenAPIHono<AnalyticsSessionApiEnv>();
+
+  eventsApp.use(
+    "*",
     cors({
       allowMethods: ["POST"],
     }),
   );
+
+  eventsApp.use("*", loadSiteMiddleware);
+  eventsApp.use("*", extractIpMiddleware);
+  eventsApp.use("*", buildSessionIdMiddleware);
+
+  app.use("/mcp/*", assertAuthMiddleware);
+
   app.use("/static/yawa.js", cors({ allowMethods: ["GET"] }));
   app.use(
     "/static/yawa/*",
@@ -36,27 +47,11 @@ export const defineApp: DefineApi = ({ db }) => {
     }),
   );
 
-  app.use("/events/*", loadSiteMiddleware);
-  app.use("/events/*", extractIpMiddleware);
-  app.use("/events/*", buildSessionIdMiddleware);
+  eventsApp.openapi(pageViewRoute, defineCreatePageView);
+  eventsApp.openapi(trackEventRoute, defineCreateTrackEvent);
+  eventsApp.openapi(performanceMetricRoute, defineCreatePerformanceMetric);
 
-  app.use("/mcp/*", assertAuthMiddleware);
-
-  app.post(
-    "/events/view",
-    zValidator("json", AppSchema.Analytics.CreatePageViewRequestSchema),
-    defineCreatePageView,
-  );
-  app.post(
-    "/events/track",
-    zValidator("json", AppSchema.Analytics.CreateTrackEventRequestSchema),
-    defineCreateTrackEvent,
-  );
-  app.post(
-    "/events/metric",
-    zValidator("json", AppSchema.Analytics.CreatePerformanceMetricRequestSchema),
-    defineCreatePerformanceMetric,
-  );
+  app.route("/events", eventsApp);
 
   app.all("/mcp", defineMcp);
 
@@ -74,7 +69,17 @@ export const defineApp: DefineApi = ({ db }) => {
     }),
   );
 
-  app.get("/health", defineHealth);
+  app.openapi(healthRoute, defineHealth);
+
+  app.doc("/doc", {
+    openapi: "3.0.0",
+    info: {
+      version,
+      title,
+    },
+  });
+
+  app.get("/swagger", swaggerUI({ url: "/doc" }));
 
   return {
     fetch: app.fetch,
