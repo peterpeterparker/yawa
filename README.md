@@ -1,8 +1,5 @@
 # yawa - Yet Another Web Analytics
 
-> [!IMPORTANT]  
-> yawa is in early development. APIs, configuration, and data formats may change without notice. Use in production at your own risk.
-
 yawa is a self-hosted web analytics platform with no UI. Instead of dashboards, you query your data through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io), asking Claude or any compatible AI client questions about your traffic in plain language.
 
 It requires no cookie banners or GDPR consent. Its tracking script is also super tiny.
