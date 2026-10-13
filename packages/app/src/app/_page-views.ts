@@ -1,13 +1,50 @@
-import type { DefineHandler } from "../types/api";
-import { AppSchema } from "yawa-schema/app";
+import { AppSchema, CommonSchema } from "yawa-schema/app";
 import { DbPageViews } from "yawa-db";
 import { isNullish, notEmptyString } from "yawa-common";
 import { parseUserAgent } from "./helpers/user-agent";
 import { parseCampaign } from "./helpers/campaign";
 import type { AnalyticsSessionApiEnv } from "./types/api";
+import { createRoute } from "@hono/zod-openapi";
+import type { DefineZodHandler } from "../types/api";
 
-export const defineCreatePageView: DefineHandler<
-  typeof AppSchema.Analytics.CreatePageViewRequestSchema,
+export const pageViewRoute = createRoute({
+  method: "post",
+  path: "/view",
+  tags: ["Events"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: AppSchema.Analytics.CreatePageViewRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    204: {
+      description: "Page view recorded successfully",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: CommonSchema.Error.ErrorSchema,
+        },
+      },
+      description: "Invalid URL / href provided",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: CommonSchema.Error.ErrorSchema,
+        },
+      },
+      description: "Internal server error while saving to database",
+    },
+  },
+});
+
+export const defineCreatePageView: DefineZodHandler<
+  typeof pageViewRoute,
   AnalyticsSessionApiEnv
 > = async (context) => {
   const {

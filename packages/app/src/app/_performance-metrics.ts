@@ -1,10 +1,39 @@
-import type { DefineHandler } from "../types/api";
-import { AppSchema } from "yawa-schema/app";
+import { AppSchema, CommonSchema } from "yawa-schema/app";
 import { DbPerformanceMetrics } from "yawa-db";
 import type { AnalyticsSessionApiEnv } from "./types/api";
+import { createRoute } from "@hono/zod-openapi";
+import type { DefineZodHandler } from "../types/api";
 
-export const defineCreatePerformanceMetric: DefineHandler<
-  typeof AppSchema.Analytics.CreatePerformanceMetricRequestSchema,
+export const performanceMetricRoute = createRoute({
+  method: "post",
+  path: "/metric",
+  tags: ["Events"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: AppSchema.Analytics.CreatePerformanceMetricRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    204: {
+      description: "Performance metric recorded successfully",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: CommonSchema.Error.ErrorSchema,
+        },
+      },
+      description: "Internal server error while saving to database",
+    },
+  },
+});
+
+export const defineCreatePerformanceMetric: DefineZodHandler<
+  typeof performanceMetricRoute,
   AnalyticsSessionApiEnv
 > = async (context) => {
   const {
