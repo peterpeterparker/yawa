@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-import remarkGfm from "remark-gfm";
 
 const title = "Yet Another Web Analytics";
 const description = "A self-hostable web analytics with MCP.";
@@ -10,9 +9,6 @@ export default defineConfig({
   site: "https://yetanotherwebanalytics.dev",
   output: "static",
   outDir: "dist",
-  markdown: {
-    remarkPlugins: [remarkGfm],
-  },
   devToolbar: {
     enabled: false,
   },
