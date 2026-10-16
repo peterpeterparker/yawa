@@ -22,9 +22,9 @@
     "@duckdb/node-api": "^1.5.3-r.3"
   },
   "devDependencies": {
-    "@types/bun": "^1.4.0",
+    "@types/bun": "^1.4.3",
     "oxfmt": "^0.73.0",
     "oxlint": "^1.88.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   }
 }
