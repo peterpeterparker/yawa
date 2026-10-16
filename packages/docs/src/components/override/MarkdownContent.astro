@@ -1,16 +1,13 @@
 ---
-import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+import Default from "@astrojs/starlight/components/MarkdownContent.astro";
 
-const isHomepage = Astro.locals.starlightRoute.id === '';
+const isHomepage = Astro.locals.starlightRoute.id === "";
 ---
 
-{
-    isHomepage ? (
-    <>
-    </>
-        ) : (
-    <Default>
-        <slot />
-    </Default>
-        )
-}
+{isHomepage ? (
+  <></>
+) : (
+  <Default>
+    <slot />
+  </Default>
+)}

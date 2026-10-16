@@ -1,33 +1,30 @@
 ---
-import Default from '@astrojs/starlight/components/Footer.astro';
+import Default from "@astrojs/starlight/components/Footer.astro";
 
-const isHomepage = Astro.locals.starlightRoute.id === '';
+const isHomepage = Astro.locals.starlightRoute.id === "";
 ---
 
-{
-    isHomepage ? (
-    <>
-    </>
-        ) : (
-    <Default>
-        <slot />
-    </Default>
-        )
-}
+{isHomepage ? (
+  <></>
+) : (
+  <Default>
+    <slot />
+  </Default>
+)}
 
 <style>
-    footer {
-        display: grid;
-        grid-template-columns: repeat(3, calc(100% / 3));
-        padding: 0;
-    }
+  footer {
+    display: grid;
+    grid-template-columns: repeat(3, calc(100% / 3));
+    padding: 0;
+  }
 
-    .link:not(:last-of-type) {
-        border-right: var(--layout-section-border);
-    }
+  .link:not(:last-of-type) {
+    border-right: var(--layout-section-border);
+  }
 
-    .link a {
-        display: flex;
-        justify-content: center;
-    }
+  .link a {
+    display: flex;
+    justify-content: center;
+  }
 </style>
