@@ -44,7 +44,7 @@
     "packages/common": {
       "name": "yawa-common",
       "dependencies": {
-        "zod": "^4.5.4",
+        "zod": "^4.6.7",
       },
     },
     "packages/db": {
@@ -52,7 +52,7 @@
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
-        "zod": "^4.5.4",
+        "zod": "^4.6.7",
       },
     },
     "packages/docs": {
@@ -72,7 +72,7 @@
     "packages/schema": {
       "name": "yawa-schema",
       "dependencies": {
-        "zod": "^4.5.4",
+        "zod": "^4.6.7",
       },
     },
     "packages/tracker": {
