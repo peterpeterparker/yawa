@@ -1,84 +1,89 @@
 ---
 import Logo from "./Logo.astro";
 import pkg from "../../../../app/package.json";
-import { LinkButton } from '@astrojs/starlight/components';
+import { LinkButton } from "@astrojs/starlight/components";
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline } = data.hero || {};
 ---
 
 <script>
-    import { navigate } from 'astro:transitions/client';
+  import { navigate } from "astro:transitions/client";
 
-    const yawaLib = `${process.env.NODE_ENV === "production"
-        ? "https://analytics.fluster.io" :
-        "http://localhost:3000"}/static/yawa/dist/index.js`
+  const yawaLib = `${
+    process.env.NODE_ENV === "production" ? "https://analytics.fluster.io" : "http://localhost:3000"
+  }/static/yawa/dist/index.js`;
 
-    type TrackEvent = {name: "terminal-help"} | {name: "terminal-about"}  | {name: "terminal-testimonials"} | {name: "terminal-docs"} | {name: "terminal-github"} | {name: "terminal-author"} | {name: "terminal-other", metadata: {prompt: string}}
+  type TrackEvent =
+    | { name: "terminal-help" }
+    | { name: "terminal-about" }
+    | { name: "terminal-testimonials" }
+    | { name: "terminal-docs" }
+    | { name: "terminal-github" }
+    | { name: "terminal-author" }
+    | { name: "terminal-other"; metadata: { prompt: string } };
 
-    // Used as fire and forget on purposes
-    export const trackEvent = async ($event: TrackEvent) => {
-        const {trackAsync} = await import(yawaLib);
+  // Used as fire and forget on purposes
+  export const trackEvent = async ($event: TrackEvent) => {
+    const { trackAsync } = await import(yawaLib);
 
-        await trackAsync($event);
+    await trackAsync($event);
+  };
+
+  const render = ({ nodes }: { nodes: NodeList }) => {
+    const body = document.querySelector("div.terminal-body");
+
+    // TS guard unlikely
+    if (body === null) {
+      return;
     }
 
-    const render = ({nodes}: {nodes: NodeList}) => {
-        const body = document.querySelector("div.terminal-body");
+    const observer = new MutationObserver(() => {
+      body.scroll({ top: body.scrollHeight, behavior: "smooth" });
+      observer.disconnect();
+    });
 
-        // TS guard unlikely
-        if (body === null) {
-            return;
-        }
+    observer.observe(body, { childList: true, subtree: true });
 
-        const observer = new MutationObserver(
-            () => {
-                body.scroll({ top: body.scrollHeight, behavior: 'smooth' });
-                observer.disconnect();
-            }
-        );
+    const chat = body.querySelector(".terminal-chat");
+    chat?.append(...nodes);
+  };
 
-        observer.observe(body, {childList: true, subtree: true});
+  const renderPrompt = ({ prompt }: { prompt: string }) => {
+    const htmlPrompt = `<span class="terminal-prompt">❯</span>
 
-        const chat = body.querySelector('.terminal-chat');
-        chat?.append(...nodes);
-    }
+        <span class="terminal-cmd">${prompt}</span>`;
 
-    const renderPrompt = ({prompt}: {prompt: string}) => {
-        const htmlPrompt = `<span class="terminal-prompt">❯</span>
+    const divPrompt = document.createElement("div");
+    divPrompt.innerHTML = htmlPrompt;
 
-        <span class="terminal-cmd">${prompt}</span>`
+    render({ nodes: divPrompt.childNodes });
+  };
 
-        const divPrompt = document.createElement('div');
-        divPrompt.innerHTML = htmlPrompt;
+  const renderResponse = ({ htmlResponse }: { htmlResponse: string }) => {
+    const divResponse = document.createElement("div");
+    divResponse.innerHTML = htmlResponse;
 
-        render({nodes: divPrompt.childNodes});
-    }
+    render({ nodes: divResponse.childNodes });
+  };
 
-    const renderResponse = ({htmlResponse}: {htmlResponse: string}) => {
-        const divResponse = document.createElement('div');
-        divResponse.innerHTML = htmlResponse;
+  const renderItsATrap = (args: { prompt: string }) => {
+    renderPrompt(args);
 
-        render({nodes: divResponse.childNodes});
-    }
-
-    const renderItsATrap = (args: {prompt: string}) => {
-        renderPrompt(args);
-
-        const htmlResponse = `<span class="terminal-bullet">•</span>
+    const htmlResponse = `<span class="terminal-bullet">•</span>
 
         <div class="terminal-response">
             <p>LOL, you really thought this was a live chat? 😂</p>
             <p>Head over to <a href="/getting-started">/docs</a> to learn how to install yawa and use your MCP client.</p>
 </div>`;
 
-        renderResponse({htmlResponse});
-    }
+    renderResponse({ htmlResponse });
+  };
 
-    const renderHelp = (args: {prompt: string}) => {
-        renderPrompt(args);
+  const renderHelp = (args: { prompt: string }) => {
+    renderPrompt(args);
 
-        const htmlResponse = `<span class="terminal-bullet">•</span>
+    const htmlResponse = `<span class="terminal-bullet">•</span>
 
         <div class="terminal-response">
             <p>Available commands:</p>
@@ -92,13 +97,13 @@ const { title = data.title, tagline } = data.hero || {};
             </ul>
 </div>`;
 
-        renderResponse({htmlResponse});
-    }
+    renderResponse({ htmlResponse });
+  };
 
-    const renderDescription = (args: {prompt: string}) => {
-        renderPrompt(args);
+  const renderDescription = (args: { prompt: string }) => {
+    renderPrompt(args);
 
-        const htmlResponse = `<span class="terminal-bullet">•</span>
+    const htmlResponse = `<span class="terminal-bullet">•</span>
 
         <div class="terminal-response">
             <p><code>yawa</code> is yet another self-hosted web analytics platform but with no UI. Instead of dashboards, you query your data through the MCP, asking Claude or any compatible AI client questions about your traffic in plain language.</p>
@@ -109,422 +114,443 @@ const { title = data.title, tagline } = data.hero || {};
             <li><strong>LLM ready</strong> - ask Claude or any MCP client about your traffic</li>
             <li><strong>Full-featured</strong> - page views, referrers, events, web vitals and more</li>
             </ul>
-</div>`
+</div>`;
 
-        renderResponse({htmlResponse});
-    }
+    renderResponse({ htmlResponse });
+  };
 
-    const renderTestimonials = (args: {prompt: string}) => {
-        renderPrompt(args);
+  const renderTestimonials = (args: { prompt: string }) => {
+    renderPrompt(args);
 
-        const htmlResponse = `<span class="terminal-bullet">•</span>
+    const htmlResponse = `<span class="terminal-bullet">•</span>
 
         <div class="terminal-response">
             <p><strong>"60% of the time, it works every time."</strong>  - Brian Fantana, the OG of analytics</p>
-        </div>`
+        </div>`;
 
-        renderResponse({htmlResponse});
+    renderResponse({ htmlResponse });
+  };
+
+  const oninput = async ($event: Event) => {
+    if (!("key" in $event) || $event.key !== "Enter") {
+      return;
     }
 
-    const oninput = async ($event: Event) => {
-        if (!("key" in $event) || $event.key !== "Enter") {
-            return;
-        }
+    const input = document.querySelector<HTMLInputElement>("input.terminal-input");
 
-        const input = document.querySelector<HTMLInputElement>("input.terminal-input");
-
-        // TS guard unlikely
-        if (input === null) {
-            return;
-        }
-
-        const prompt = input?.value?.toLowerCase().trim();
-
-        switch (prompt) {
-            case "what is yawa":
-            case "what is yawa?":
-            case "about":
-                trackEvent({name: "terminal-about"});
-                renderDescription({prompt});
-                break;
-            case "what do people say":
-            case "what do people say?":
-            case "testimonial":
-            case "testimonials":
-                trackEvent({name: "terminal-testimonials"});
-                renderTestimonials({prompt});
-                break;
-            case "/docs":
-                trackEvent({name: "terminal-docs"});
-                await navigate('/getting-started');
-                break;
-            case "/github":
-                trackEvent({name: "terminal-github"});
-                window.location.href = "https://github.com/peterpeterparker/yawa";
-                break;
-            case "/author":
-                trackEvent({name: "terminal-author"});
-                window.location.href = "https://daviddalbusco.com";
-                break;
-            case "?":
-            case "help":
-            case "/help":
-                trackEvent({name: "terminal-help"});
-                renderHelp({prompt});
-                break;
-            default:
-                trackEvent({name: "terminal-other", metadata: {prompt: prompt ?? ""}});
-                renderItsATrap({prompt});
-        }
-
-        input.value = "";
+    // TS guard unlikely
+    if (input === null) {
+      return;
     }
 
-    const onmount = () => {
-        const input = document.querySelector("input.terminal-input");
-        input?.addEventListener("keydown", oninput, {passive: true});
+    const prompt = input?.value?.toLowerCase().trim();
+
+    switch (prompt) {
+      case "what is yawa":
+      case "what is yawa?":
+      case "about":
+        trackEvent({ name: "terminal-about" });
+        renderDescription({ prompt });
+        break;
+      case "what do people say":
+      case "what do people say?":
+      case "testimonial":
+      case "testimonials":
+        trackEvent({ name: "terminal-testimonials" });
+        renderTestimonials({ prompt });
+        break;
+      case "/docs":
+        trackEvent({ name: "terminal-docs" });
+        await navigate("/getting-started");
+        break;
+      case "/github":
+        trackEvent({ name: "terminal-github" });
+        window.location.href = "https://github.com/peterpeterparker/yawa";
+        break;
+      case "/author":
+        trackEvent({ name: "terminal-author" });
+        window.location.href = "https://daviddalbusco.com";
+        break;
+      case "?":
+      case "help":
+      case "/help":
+        trackEvent({ name: "terminal-help" });
+        renderHelp({ prompt });
+        break;
+      default:
+        trackEvent({ name: "terminal-other", metadata: { prompt: prompt ?? "" } });
+        renderItsATrap({ prompt });
     }
 
-    document.addEventListener("DOMContentLoaded", onmount);
+    input.value = "";
+  };
+
+  const onmount = () => {
+    const input = document.querySelector("input.terminal-input");
+    input?.addEventListener("keydown", oninput, { passive: true });
+  };
+
+  document.addEventListener("DOMContentLoaded", onmount);
 </script>
 
 <div class="terminal">
-    <div class="terminal-body">
+  <div class="terminal-body">
     <div class="terminal-welcome">
-        <div class="terminal-welcome-label">yawa <span class="yawa-version">v{pkg.version}</span></div>
-        <div class="terminal-welcome-body">
-            <div class="terminal-welcome-left">
-                <h1 class="terminal-welcome-title" data-page-title set:html={title} />
-                <Logo />
-                {tagline && <p class="terminal-welcome-tagline" set:html={tagline} />}
-            </div>
-            <div class="terminal-welcome-divider"></div>
-            <div class="terminal-welcome-right">
-                <p class="terminal-welcome-section">Tips for getting started</p>
-                <p class="terminal-welcome-line">Run /help to see available commands.</p>
-                <div class="terminal-welcome-sep"></div>
-                <p class="terminal-welcome-section">What's new</p>
-                <p class="terminal-welcome-line">26+ MCP analytics tools.</p>
-                <p class="terminal-welcome-line">Privacy-friendly, no cookie banners.</p>
-                <p class="terminal-welcome-line">Self-hosted.</p>
-            </div>
+      <div class="terminal-welcome-label">
+        yawa <span class="yawa-version">v{pkg.version}</span>
+      </div>
+      <div class="terminal-welcome-body">
+        <div class="terminal-welcome-left">
+          <h1 class="terminal-welcome-title" data-page-title set:html={title} />
+          <Logo />
+          {tagline && <p class="terminal-welcome-tagline" set:html={tagline} />}
         </div>
+        <div class="terminal-welcome-divider"></div>
+        <div class="terminal-welcome-right">
+          <p class="terminal-welcome-section">Tips for getting started</p>
+          <p class="terminal-welcome-line">Run /help to see available commands.</p>
+          <div class="terminal-welcome-sep"></div>
+          <p class="terminal-welcome-section">What's new</p>
+          <p class="terminal-welcome-line">26+ MCP analytics tools.</p>
+          <p class="terminal-welcome-line">Privacy-friendly, no cookie banners.</p>
+          <p class="terminal-welcome-line">Self-hosted.</p>
+        </div>
+      </div>
     </div>
 
     <div class="terminal-chat">
-        <span class="terminal-prompt">❯</span>
+      <span class="terminal-prompt">❯</span>
 
-        <span class="terminal-cmd">what are my top pages this week?</span>
+      <span class="terminal-cmd">what are my top pages this week?</span>
 
-        <p class="terminal-action">Called your-analytics</p>
+      <p class="terminal-action">Called your-analytics</p>
 
-        <span class="terminal-bullet">•</span>
+      <span class="terminal-bullet">•</span>
 
-        <div class="terminal-response">
-            <p>Here are your top 10 pages for this week (Jun 15–19):</p>
-            <table>
-                <thead>
-                <tr>
-                    <th>Page</th>
-                    <th>Visitors</th>
-                    <th>Pageviews</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr><td>/ (homepage)</td><td>312</td><td>489</td></tr>
-                <tr><td>/blog</td><td>201</td><td>334</td></tr>
-                <tr><td>/about</td><td>98</td><td>121</td></tr>
-                <tr><td>/blog/hello-world</td><td>87</td><td>103</td></tr>
-                </tbody>
-            </table>
-            <p>Your homepage clearly stands out, with the blog close behind.</p>
-        </div>
+      <div class="terminal-response">
+        <p>Here are your top 10 pages for this week (Jun 15–19):</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Page</th>
+              <th>Visitors</th>
+              <th>Pageviews</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>/ (homepage)</td>
+              <td>312</td>
+              <td>489</td>
+            </tr>
+            <tr>
+              <td>/blog</td>
+              <td>201</td>
+              <td>334</td>
+            </tr>
+            <tr>
+              <td>/about</td>
+              <td>98</td>
+              <td>121</td>
+            </tr>
+            <tr>
+              <td>/blog/hello-world</td>
+              <td>87</td>
+              <td>103</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Your homepage clearly stands out, with the blog close behind.</p>
+      </div>
     </div>
+  </div>
+
+  <div class="terminal-footer">
+    <span class="terminal-prompt">❯</span>
+
+    <div class="terminal-input-wrapper">
+      <input class="terminal-input" autofocus type="text" placeholder=" " />
     </div>
 
-    <div class="terminal-footer">
-        <span class="terminal-prompt">❯</span>
-
-        <div class="terminal-input-wrapper">
-            <input class="terminal-input" autofocus type="text" placeholder=" " />
-        </div>
-
-        <span class="terminal-shortcuts">? for shortcuts</span>
-    </div>
+    <span class="terminal-shortcuts">? for shortcuts</span>
+  </div>
 </div>
 
 <div class="footer">
-    <LinkButton href="/getting-started" variant="secondary" icon="right-arrow">Get started</LinkButton>
+  <LinkButton href="/getting-started" variant="secondary" icon="right-arrow">
+    Get started
+  </LinkButton>
 </div>
 
 <style>
-    .terminal {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: var(--sl-text-sm);
-        margin-top: 0;
+  .terminal {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: var(--sl-text-sm);
+    margin-top: 0;
 
-        @media screen and (min-width: 768px) {
-            margin-top: 0.5rem;
-        }
-
-        @media screen and (min-width: 1140px) {
-            margin-top: 1.5rem;
-        }
+    @media screen and (min-width: 768px) {
+      margin-top: 0.5rem;
     }
 
-    .terminal-body {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-
-        @media screen and (min-width: 768px) {
-            max-height: 595px;
-            overflow-y: auto;
-        }
+    @media screen and (min-width: 1140px) {
+      margin-top: 1.5rem;
     }
+  }
 
-    .terminal-chat {
-        flex: 1;
+  .terminal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    @media screen and (min-width: 768px) {
+      max-height: 595px;
+      overflow-y: auto;
     }
+  }
 
-    .terminal-welcome {
-        border: 1px solid var(--sl-color-orange);
-        border-radius: 4px;
-        position: relative;
+  .terminal-chat {
+    flex: 1;
+  }
 
-        @media screen and (min-width: 768px) {
-            margin: 1rem 2rem;
-        }
+  .terminal-welcome {
+    border: 1px solid var(--sl-color-orange);
+    border-radius: 4px;
+    position: relative;
+
+    @media screen and (min-width: 768px) {
+      margin: 1rem 2rem;
     }
+  }
 
-    .terminal-welcome-label {
-        position: absolute;
-        top: -0.75rem;
-        left: 0.75rem;
-        background: var(--sl-color-bg-nav);
-        padding: 0 0.4rem;
-        color: var(--sl-color-orange);
-        font-size: var(--sl-text-2xs);
+  .terminal-welcome-label {
+    position: absolute;
+    top: -0.75rem;
+    left: 0.75rem;
+    background: var(--sl-color-bg-nav);
+    padding: 0 0.4rem;
+    color: var(--sl-color-orange);
+    font-size: var(--sl-text-2xs);
+  }
+
+  .yawa-version {
+    color: var(--sl-color-gray-3);
+  }
+
+  .terminal-welcome-body {
+    display: flex;
+    gap: 0;
+    padding: 1rem;
+  }
+
+  .terminal-welcome-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    padding-right: 1rem;
+  }
+
+  .terminal-welcome-title {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    font-weight: bold;
+    color: var(--sl-color-white);
+    margin: 0;
+  }
+
+  .terminal-welcome-tagline {
+    color: var(--sl-color-blue);
+    font-size: var(--sl-text-2xs);
+    margin: 0;
+
+    @media screen and (min-width: 768px) {
+      text-align: left;
     }
+  }
 
-    .yawa-version {
-        color: var(--sl-color-gray-3);
+  .terminal-welcome-divider {
+    display: none;
+    width: 1px;
+    background: var(--sl-color-orange-low);
+    margin: 0 1rem;
+    align-self: stretch;
+
+    @media screen and (min-width: 768px) {
+      display: block;
     }
+  }
 
-    .terminal-welcome-body {
-        display: flex;
-        gap: 0;
-        padding: 1rem;
+  .terminal-welcome-right {
+    flex: 2;
+    display: none;
+    flex-direction: column;
+
+    @media screen and (min-width: 768px) {
+      display: flex;
     }
+  }
 
-    .terminal-welcome-left {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        text-align: center;
-        padding-right: 1rem;
+  .terminal-welcome-section {
+    color: var(--sl-color-orange);
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .terminal-welcome-line {
+    margin: 0;
+    font-size: 0.82rem;
+  }
+
+  .terminal-welcome-sep {
+    height: 1px;
+    background: var(--sl-color-orange-low);
+    margin: 0.75rem 0;
+  }
+
+  .terminal-chat,
+  .terminal-footer {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.25rem;
+    row-gap: 0.35rem;
+  }
+
+  .terminal-chat {
+    display: grid;
+    padding: 1.5rem 0;
+
+    @media screen and (min-width: 768px) {
+      display: grid;
+      padding: 0.5rem 2rem;
     }
+  }
 
-    .terminal-welcome-title {
-        font-family: inherit;
-        font-size: inherit;
-        line-height: inherit;
-        letter-spacing: inherit;
-        font-weight: bold;
-        color: var(--sl-color-white);
-        margin: 0;
-    }
+  :global(.terminal-prompt) {
+    color: var(--sl-color-purple);
+  }
 
-    .terminal-welcome-tagline {
-        color: var(--sl-color-blue);
-        font-size: var(--sl-text-2xs);
-        margin: 0;
+  :global(.terminal-bullet) {
+    color: var(--sl-color-white);
+  }
 
-        @media screen and (min-width: 768px) {
-            text-align: left;
-        }
-    }
+  :global(.terminal-cmd) {
+    color: var(--sl-color-white);
+  }
 
-    .terminal-welcome-divider {
-        display: none;
-        width: 1px;
-        background: var(--sl-color-orange-low);
-        margin: 0 1rem;
-        align-self: stretch;
+  .terminal-action {
+    grid-column: 2/3;
+    color: var(--sl-color-gray-3);
+    font-size: 0.75rem;
+  }
 
-        @media screen and (min-width: 768px) {
-            display: block;
-        }
-    }
-
-    .terminal-welcome-right {
-        flex: 2;
-        display: none;
-        flex-direction: column;
-
-        @media screen and (min-width: 768px) {
-            display: flex;
-        }
-    }
-
-    .terminal-welcome-section {
-        color: var(--sl-color-orange);
-        font-weight: bold;
-        margin: 0;
-    }
-
-    .terminal-welcome-line {
-        margin: 0;
-        font-size: 0.82rem;
-    }
-
-    .terminal-welcome-sep {
-        height: 1px;
-        background: var(--sl-color-orange-low);
-        margin: 0.75rem 0;
-    }
-
-    .terminal-chat, .terminal-footer {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        column-gap: 0.25rem;
-        row-gap: .35rem;
-    }
-
-    .terminal-chat {
-        display: grid;
-        padding: 1.5rem 0;
-
-        @media screen and (min-width: 768px) {
-            display: grid;
-            padding: 0.5rem 2rem;
-        }
-    }
-
-    :global(.terminal-prompt) {
-        color: var(--sl-color-purple);
-    }
-
-    :global(.terminal-bullet) {
-        color: var(--sl-color-white);
-    }
-
-    :global(.terminal-cmd) {
-        color: var(--sl-color-white);
-    }
-
+  :root[data-theme="light"] {
     .terminal-action {
-        grid-column: 2/3;
-        color: var(--sl-color-gray-3);
-        font-size: 0.75rem;
+      color: var(--sl-color-gray-4);
     }
+  }
 
-    :root[data-theme="light"] {
-        .terminal-action {
-            color: var(--sl-color-gray-4);
-        }
+  :global(.terminal-response) {
+    grid-column: 2/3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 0 1rem;
+  }
+
+  :global(.terminal-response p) {
+    margin: 0;
+    color: var(--sl-color-white);
+  }
+
+  :global(.terminal-response ul) {
+    padding: 0;
+    list-style-type: none;
+    margin: 0 0 0 -1px;
+  }
+
+  :global(.terminal-response code) {
+    background-color: var(--sl-color-bg-inline-code);
+    margin-block: -0.125rem;
+    padding: 0.125rem 0.375rem;
+  }
+
+  .terminal-response table {
+    border-collapse: collapse;
+  }
+
+  .terminal-response th,
+  .terminal-response td {
+    border: 1px solid var(--sl-color-hairline-shade);
+    padding: 0.3rem 0.75rem;
+    text-align: left;
+  }
+
+  .terminal-response th {
+    color: var(--sl-color-white);
+    background: var(--sl-color-gray-6);
+  }
+
+  .terminal-footer {
+    display: none;
+    border-top: 1px solid var(--sl-color-gray-5);
+
+    @media screen and (min-width: 768px) {
+      display: grid;
     }
+  }
 
-    :global(.terminal-response) {
-        grid-column: 2/3;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        padding: 0 0 1rem;
+  .terminal-footer .terminal-prompt {
+    padding: 0.25rem 0 0 2rem;
+  }
+
+  .terminal-footer .terminal-input-wrapper {
+    padding: 0.225rem 2rem 0 0;
+  }
+
+  .terminal-shortcuts {
+    grid-column: 1/3;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0.4rem 2rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-3);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+
+  .terminal-input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .terminal-input {
+    background: transparent;
+    appearance: none;
+    border: none;
+    outline: none;
+    color: var(--sl-color-white);
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+    caret-color: var(--sl-color-purple);
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+
+    @media screen and (min-width: 768px) {
+      display: none;
     }
+  }
 
-    :global(.terminal-response p) {
-        margin: 0;
-        color: var(--sl-color-white);
-    }
-
-    :global(.terminal-response ul) {
-        padding: 0;
-        list-style-type: none;
-        margin: 0 0 0 -1px;
-    }
-
-    :global(.terminal-response code) {
-        background-color: var(--sl-color-bg-inline-code);
-        margin-block: -0.125rem;
-        padding: 0.125rem 0.375rem;
-    }
-
-    .terminal-response table {
-        border-collapse: collapse;
-    }
-
-    .terminal-response th,
-    .terminal-response td {
-        border: 1px solid var(--sl-color-hairline-shade);
-        padding: 0.3rem 0.75rem;
-        text-align: left;
-    }
-
-    .terminal-response th {
-        color: var(--sl-color-white);
-        background: var(--sl-color-gray-6);
-    }
-
-    .terminal-footer {
-        display: none;
-        border-top: 1px solid var(--sl-color-gray-5);
-
-        @media screen and (min-width: 768px) {
-            display: grid;
-        }
-    }
-
-    .terminal-footer .terminal-prompt {
-        padding: 0.25rem 0 0 2rem;
-    }
-
-    .terminal-footer .terminal-input-wrapper {
-        padding: 0.225rem 2rem 0 0;
-    }
-
-    .terminal-shortcuts {
-        grid-column: 1/3;
-        display: flex;
-        justify-content: flex-start;
-        padding: 0.4rem 2rem;
-        background: var(--sl-color-gray-6);
-        color: var(--sl-color-gray-3);
-        font-size: 0.75rem;
-        border-top: 1px solid var(--sl-color-gray-5);
-    }
-
-    .terminal-input-wrapper {
-        display: flex;
-        align-items: center;
-        position: relative;
-    }
-
-    .terminal-input {
-        background: transparent;
-        appearance: none;
-        border: none;
-        outline: none;
-        color: var(--sl-color-white);
-        font-family: inherit;
-        font-size: inherit;
-        width: 100%;
-        caret-color: var(--sl-color-purple);
-    }
-
-    .footer {
-        display: flex;
-        justify-content: center;
-        margin: 0;
-
-        @media screen and (min-width: 768px) {
-            display: none;
-        }
-    }
-
-    .footer a {
-        font-size: var(--sl-text-base);
-    }
+  .footer a {
+    font-size: var(--sl-text-base);
+  }
 </style>
