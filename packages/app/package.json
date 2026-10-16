@@ -12,14 +12,14 @@
   "dependencies": {
     "@hono/mcp": "^0.3.2",
     "@hono/zod-validator": "^0.9.1",
-    "@modelcontextprotocol/sdk": "^1.30.0",
-    "hono": "^4.13.5",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "hono": "^4.13.13",
     "ipaddr.js": "^2.5.0",
     "ua-parser-js": "1.0.41",
     "yawa-common": "workspace:*",
     "yawa-db": "workspace:*",
     "yawa-schema": "workspace:*",
-    "zod": "^4.5.4"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/ua-parser-js": "^0.7.39"
