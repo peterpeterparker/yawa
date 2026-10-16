@@ -1,6 +1,6 @@
 {
   "name": "yawa-cli",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": true,
   "type": "module",
   "module": "src/index.ts",
