@@ -16,7 +16,7 @@
     },
     "packages/app": {
       "name": "yawa-app",
-      "version": "0.0.10",
+      "version": "0.1.0",
       "dependencies": {
         "@hono/mcp": "^0.3.5",
         "@hono/zod-validator": "^0.9.1",
@@ -35,7 +35,7 @@
     },
     "packages/cli": {
       "name": "yawa-cli",
-      "version": "0.0.7",
+      "version": "0.1.0",
       "dependencies": {
         "yawa-common": "workspace:*",
         "yawa-schema": "workspace:*",
@@ -57,7 +57,7 @@
     },
     "packages/docs": {
       "name": "yawa-docs",
-      "version": "0.0.16",
+      "version": "0.1.0",
       "dependencies": {
         "@astrojs/starlight": "^0.42.10",
         "@fontsource-variable/nunito-sans": "^5.3.0",
@@ -76,7 +76,7 @@
     },
     "packages/tracker": {
       "name": "yawa-tracker",
-      "version": "0.0.7",
+      "version": "0.1.0",
       "dependencies": {
         "web-vitals": "^6.2.3",
       },
