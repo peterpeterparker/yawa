@@ -6,6 +6,7 @@ import { AppSchema } from "yawa-schema/app";
 import { defineCreatePageView } from "./_page-views";
 import { loadSiteMiddleware } from "./middlewares/site";
 import { cors } from "hono/cors";
+import { secureHeaders } from "hono/secure-headers";
 import { extractIpMiddleware } from "./middlewares/ip";
 import { buildSessionIdMiddleware } from "./middlewares/session-id";
 import { assertAuthMiddleware } from "../middlewares/auth";
@@ -19,6 +20,8 @@ import { join } from "node:path";
 
 export const defineApp: DefineApi = ({ db }) => {
   const app = new Hono();
+
+  app.use("*", secureHeaders({ strictTransportSecurity: "max-age=31536000" }));
 
   app.use("*", loadDbMiddleware({ db }));
 
