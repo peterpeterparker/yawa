@@ -21,9 +21,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.42.6",
+    "@astrojs/starlight": "^0.42.10",
     "@fontsource-variable/nunito-sans": "^5.3.0",
-    "astro": "^7.4.0",
+    "astro": "^7.4.9",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
