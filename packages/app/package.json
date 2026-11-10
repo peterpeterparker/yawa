@@ -10,10 +10,10 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@hono/mcp": "^0.3.2",
+    "@hono/mcp": "^0.3.5",
     "@hono/zod-validator": "^0.9.1",
-    "@modelcontextprotocol/sdk": "^1.32.1",
-    "hono": "^4.13.13",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "hono": "^4.13.17",
     "ipaddr.js": "^2.5.0",
     "ua-parser-js": "1.0.41",
     "yawa-common": "workspace:*",
