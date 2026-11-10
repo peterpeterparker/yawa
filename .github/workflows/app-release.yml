@@ -20,9 +20,9 @@ jobs:
       file: ./Dockerfile.app
       meta-images: peterpeterparker/yawa
       meta-tags: |
-        type=semver,pattern={{version}}
-        type=semver,pattern={{major}}.{{minor}}
-        type=semver,pattern={{major}}
+        type=semver,pattern={{version}},match=v(\d+\.\d+\.\d+)$
+        type=semver,pattern={{major}}.{{minor}},match=v(\d+\.\d+\.\d+)$
+        type=semver,pattern={{major}},match=v(\d+\.\d+\.\d+)$
 
     secrets:
       registry-auths: |
