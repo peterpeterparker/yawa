@@ -6,7 +6,7 @@ import {
   DbPageViews,
   DbSites,
 } from "../../../src";
-import { DbPageViewsAnalytics } from "../../../src/queries/analytics/page-views";
+import { DbPageViewsAnalytics } from "../../../src/queries/analytics/page-views/analytics";
 
 const pageView = (
   siteId: string,

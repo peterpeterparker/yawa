@@ -1,120 +1,24 @@
-import type { DbConnection } from "../../db/connection";
+import type { DbConnection } from "../../../db/connection";
 import type { Result } from "yawa-common";
 import * as z from "zod";
-import type { QueryAnalyticsParams, QueryAnalyticsParamsWithLimit } from "./types";
-
-const StatsSchema = z.strictObject({
-  pageviews: z.coerce.number(),
-  visitors: z.coerce.number(),
-  visits: z.coerce.number(),
-  bounces: z.coerce.number(),
-});
-
-export const OptionStatsSchema = StatsSchema.optional();
-
-const ExpandedSchema = z.strictObject({
-  name: z.string(),
-  pageviews: z.coerce.number(),
-  visitors: z.coerce.number(),
-  visits: z.coerce.number(),
-  bounces: z.coerce.number(),
-  totaltime: z.coerce.number(),
-});
-
-export const ListExpandedSchema = z.array(ExpandedSchema);
-
-const MetricSchema = z.strictObject({
-  name: z.string(),
-  visitors: z.coerce.number(),
-});
-
-export const ListMetricSchema = z.array(MetricSchema);
-
-const SeriesSchema = z.strictObject({
-  date: z.string(),
-  pageviews: z.coerce.number(),
-  visitors: z.coerce.number(),
-});
-
-export const ListSeriesSchema = z.array(SeriesSchema);
-
-const HourSchema = z.strictObject({
-  hour: z.coerce.number(),
-  pageviews: z.coerce.number(),
-  visitors: z.coerce.number(),
-});
-
-export const ListHourSchema = z.array(HourSchema);
-
-const PageSchema = z.strictObject({
-  href: z.string(),
-  visitors: z.coerce.number(),
-  pageviews: z.coerce.number(),
-});
-
-export const ListPageSchema = z.array(PageSchema);
-
-const TitleSchema = z.strictObject({
-  name: z.string(),
-  visitors: z.coerce.number(),
-  pageviews: z.coerce.number(),
-});
-
-export const ListTitleSchema = z.array(TitleSchema);
-
-/**
- * Inactivity gap after which a new visit starts for the same session.
- */
-const VISIT_TIMEOUT = "INTERVAL 30 MINUTE";
-
-/**
- * CTE exposing the page views of a site within a date range, each tagged with a `visit_key`.
- *
- * Visits are derived server-side from the daily `session_id` hash: a new visit starts on the
- * first pageview of a session or after more than 30 minutes of inactivity. The `visit_id` sent
- * by the tracker is ignored because it is regenerated on every full page load.
- *
- * Because `session_id` rotates daily, visits also end at midnight.
- */
-const VISITS_CTE = `WITH flagged_page_views AS (
-    SELECT *,
-           CASE
-             WHEN created_at - LAG(created_at) OVER (PARTITION BY session_id ORDER BY created_at) <= ${VISIT_TIMEOUT}
-             THEN 0 ELSE 1
-           END AS new_visit
-    FROM yawa_analytics.page_views
-    WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
-  ),
-  visit_page_views AS (
-    SELECT *,
-           session_id::VARCHAR || ':' || CAST(SUM(new_visit) OVER (
-             PARTITION BY session_id ORDER BY created_at ROWS UNBOUNDED PRECEDING
-           ) AS VARCHAR) AS visit_key
-    FROM flagged_page_views
-  )`;
-
-/**
- * Operating system names, as reported by ua-parser-js, that never count as desktop
- * when the device type is missing (null).
- */
-const MOBILE_OPERATING_SYSTEMS = [
-  "Android",
-  "iOS",
-  "HarmonyOS",
-  "OpenHarmony",
-  "KaiOS",
-  "watchOS",
-  "Windows Phone",
-  "Windows Phone OS",
-  "Windows Mobile",
-  "BlackBerry",
-  "Tizen",
-  "Sailfish",
-  "Ubuntu Touch",
-  "Firefox OS",
-]
-  .map((os) => `'${os.toLowerCase()}'`)
-  .join(", ");
+import type { QueryAnalyticsParams, QueryAnalyticsParamsWithLimit } from "../types";
+import {
+  ExpandedSchema,
+  HourSchema,
+  type ListExpandedSchema,
+  type ListHourSchema,
+  type ListMetricSchema,
+  type ListPageSchema,
+  type ListSeriesSchema,
+  type ListTitleSchema,
+  MetricSchema,
+  type OptionStatsSchema,
+  PageSchema,
+  SeriesSchema,
+  StatsSchema,
+  TitleSchema,
+} from "./schemas";
+import { MOBILE_OPERATING_SYSTEMS, VISITS_CTE } from "./_contants";
 
 export class DbPageViewsAnalytics {
   #connection: DbConnection;
