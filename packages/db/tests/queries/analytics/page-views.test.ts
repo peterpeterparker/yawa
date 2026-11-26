@@ -434,6 +434,44 @@ describe("DbQueryPageViewsAnalytics", () => {
       expect(names).toContain("desktop");
       expect(names).toContain("mobile");
     });
+
+    test("counts a missing device type as desktop only for non-mobile operating systems", async () => {
+      const pageViews = DbPageViews.create({ connection });
+
+      // ua-parser-js: no device type for desktop browsers, OS names as reported
+      await pageViews.insert(
+        pageView(siteId, { client_device: null, client_operating_system: "Debian" }),
+      );
+      await pageViews.insert(
+        pageView(siteId, { client_device: null, client_operating_system: "Mac OS" }),
+      );
+      // Mobile OS without a device type: not desktop
+      await pageViews.insert(
+        pageView(siteId, { client_device: null, client_operating_system: "Android" }),
+      );
+      // Mobile OS spelled as found in the user agent: not desktop
+      await pageViews.insert(
+        pageView(siteId, { client_device: null, client_operating_system: "windows mobile" }),
+      );
+      // Crawler: neither device type nor OS
+      await pageViews.insert(
+        pageView(siteId, { client_device: null, client_operating_system: null }),
+      );
+
+      const result = await analytics.getDevices({ site_id: siteId, from, to });
+
+      expect(result.status).toBe("success");
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      // desktop: session A from the fixtures + Debian + Mac OS; mobile: session B
+      expect(result.result).toEqual([
+        { name: "desktop", visitors: 3 },
+        { name: "mobile", visitors: 1 },
+      ]);
+    });
   });
 
   describe("getLanguages", () => {

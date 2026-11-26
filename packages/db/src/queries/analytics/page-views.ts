@@ -93,6 +93,29 @@ const VISITS_CTE = `WITH flagged_page_views AS (
     FROM flagged_page_views
   )`;
 
+/**
+ * Operating system names, as reported by ua-parser-js, that never count as desktop
+ * when the device type is missing (null).
+ */
+const MOBILE_OPERATING_SYSTEMS = [
+  "Android",
+  "iOS",
+  "HarmonyOS",
+  "OpenHarmony",
+  "KaiOS",
+  "watchOS",
+  "Windows Phone",
+  "Windows Phone OS",
+  "Windows Mobile",
+  "BlackBerry",
+  "Tizen",
+  "Sailfish",
+  "Ubuntu Touch",
+  "Firefox OS",
+]
+  .map((os) => `'${os.toLowerCase()}'`)
+  .join(", ");
+
 export class DbPageViewsAnalytics {
   #connection: DbConnection;
 
@@ -406,6 +429,10 @@ export class DbPageViewsAnalytics {
   /**
    * Device type breakdown by unique visitors.
    * Identifies whether visitors use mobile, tablet, or desktop.
+   *
+   * ua-parser-js leaves the device type undefined for desktop browsers. A missing device type
+   * is therefore reported as "desktop" when a non-mobile operating system was detected.
+   * Page views with neither (typically crawlers) are excluded.
    */
   async getDevices({
     site_id,
@@ -414,11 +441,22 @@ export class DbPageViewsAnalytics {
     limit = 100,
   }: QueryAnalyticsParamsWithLimit): Promise<Result<z.infer<typeof ListMetricSchema>>> {
     return this.#connection.query({
-      sql: `SELECT client_device AS name, COUNT(DISTINCT session_id) AS visitors
-            FROM yawa_analytics.page_views
-            WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
-              AND client_device IS NOT NULL
-            GROUP BY client_device ORDER BY visitors DESC LIMIT $limit`,
+      sql: `SELECT name, COUNT(DISTINCT session_id) AS visitors
+            FROM (
+              SELECT session_id,
+                     COALESCE(
+                       client_device,
+                       CASE
+                         WHEN client_operating_system IS NOT NULL
+                          AND LOWER(client_operating_system) NOT IN (${MOBILE_OPERATING_SYSTEMS})
+                         THEN 'desktop'
+                       END
+                     ) AS name
+              FROM yawa_analytics.page_views
+              WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
+            ) t
+            WHERE name IS NOT NULL
+            GROUP BY name ORDER BY visitors DESC LIMIT $limit`,
       schema: MetricSchema,
       values: { site_id, from, to, limit },
     });
