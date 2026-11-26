@@ -1,6 +1,6 @@
 import { beforeEach, afterEach, describe, expect, test } from "bun:test";
 import { __createDbInstanceForTest__, DbInstance, DbSites, DbTrackEvents } from "yawa-db";
-import { DbTrackEventsAnalytics } from "../../../src/queries/analytics/track-events";
+import { DbTrackEventsAnalytics } from "../../../src/queries/analytics/track-events/track-events";
 
 describe("DbTrackEventsAnalytics", () => {
   const from = "2026-01-01T00:00:00.000Z";

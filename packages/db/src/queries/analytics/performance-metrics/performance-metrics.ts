@@ -1,45 +1,16 @@
-import type { DbConnection } from "../../db/connection";
+import type { DbConnection } from "../../../db/connection";
 import type { Result } from "yawa-common";
 import * as z from "zod";
-import { AnalyticsSchema } from "yawa-schema/db";
-import { type QueryAnalyticsParams, QueryAnalyticsParamsWithLimitSchema } from "./types";
-
-export const QueryAnalyticsParamsWithMetricSchema = QueryAnalyticsParamsWithLimitSchema.extend({
-  metric_name: AnalyticsSchema.PerformanceMetricSchema.shape.metric_name.describe(
-    "The metric name to filter by (CLS, FCP, INP, LCP, TTFB)",
-  ),
-});
-
-type QueryAnalyticsParamsWithMetric = z.infer<typeof QueryAnalyticsParamsWithMetricSchema>;
-
-const VitalsSummarySchema = z.strictObject({
-  metric_name: z.string(),
-  avg: z.coerce.number(),
-  p75: z.coerce.number(),
-  p90: z.coerce.number(),
-  count: z.coerce.number(),
-});
-
-export const ListVitalsSummarySchema = z.array(VitalsSummarySchema);
-
-const VitalsByPageSchema = z.strictObject({
-  href: z.string(),
-  avg: z.coerce.number(),
-  p75: z.coerce.number(),
-  count: z.coerce.number(),
-});
-
-export const ListVitalsByPageSchema = z.array(VitalsByPageSchema);
-
-const VitalsDistributionSchema = z.strictObject({
-  metric_name: z.string(),
-  good: z.coerce.number(),
-  needs_improvement: z.coerce.number(),
-  poor: z.coerce.number(),
-  total: z.coerce.number(),
-});
-
-export const ListVitalsDistributionSchema = z.array(VitalsDistributionSchema);
+import { type QueryAnalyticsParams } from "../types";
+import {
+  ListVitalsByPageSchema,
+  ListVitalsDistributionSchema,
+  type ListVitalsSummarySchema,
+  type QueryAnalyticsParamsWithMetric,
+  VitalsByPageSchema,
+  VitalsDistributionSchema,
+  VitalsSummarySchema,
+} from "./schemas";
 
 export class DbPerformanceMetricsAnalytics {
   #connection: DbConnection;
