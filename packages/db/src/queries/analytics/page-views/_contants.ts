@@ -4,13 +4,8 @@
 const VISIT_TIMEOUT = "INTERVAL 30 MINUTE";
 
 /**
- * CTE exposing the page views of a site within a date range, each tagged with a `visit_key`.
- *
- * Visits are derived server-side from the daily `session_id` hash: a new visit starts on the
- * first pageview of a session or after more than 30 minutes of inactivity. The `visit_id` sent
- * by the tracker is ignored because it is regenerated on every full page load.
- *
- * Because `session_id` rotates daily, visits also end at midnight.
+ * Page views tagged with a `visit_key`: a new visit starts per `session_id` after 30 minutes
+ * of inactivity. The tracker's `visit_id` is ignored, as it changes on every page load.
  */
 export const VISITS_CTE = `WITH flagged_page_views AS (
     SELECT *,
@@ -27,6 +22,19 @@ export const VISITS_CTE = `WITH flagged_page_views AS (
              PARTITION BY session_id ORDER BY created_at ROWS UNBOUNDED PRECEDING
            ) AS VARCHAR) AS visit_key
     FROM flagged_page_views
+  )`;
+
+/**
+ * {@link VISITS_CTE} plus, per page view, the visit's pageview count and the time until
+ * the next pageview (NULL for the last one).
+ */
+export const VISIT_METRICS_CTE = `${VISITS_CTE},
+  visit_page_view_metrics AS (
+    SELECT *,
+           COUNT(*) OVER (PARTITION BY visit_key) AS visit_pageviews,
+           epoch_ms(LEAD(created_at) OVER (PARTITION BY visit_key ORDER BY created_at))
+             - epoch_ms(created_at) AS duration_ms
+    FROM visit_page_views
   )`;
 
 /**
