@@ -300,6 +300,35 @@ describe("DbQueryPageViewsAnalytics", () => {
     });
   });
 
+  // Inserts a pageview at a fixed time, `minutes` after 2026-06-01 10:00:00.
+  const insertAt = async ({
+    session_id,
+    href,
+    referrer = null,
+    minutes,
+  }: {
+    session_id: string;
+    href: string;
+    referrer?: string | null;
+    minutes: number;
+  }) => {
+    const inserted = await DbPageViews.create({ connection }).insert(
+      pageView(siteId, { session_id, href, referrer }),
+    );
+    if (inserted.status === "error") {
+      expect(true).toBeFalsy();
+      return;
+    }
+
+    const updated = await connection.run({
+      sql: `UPDATE yawa_analytics.page_views
+            SET created_at = TIMESTAMP '2026-06-01 10:00:00' + to_minutes(CAST($minutes AS BIGINT))
+            WHERE id = $id`,
+      values: { id: inserted.result.id, minutes },
+    });
+    expect(updated.status).toBe("success");
+  };
+
   describe("getTopPagesExpanded", () => {
     test("returns expanded metrics per page", async () => {
       const result = await analytics.getTopPagesExpanded({ site_id: siteId, from, to });
@@ -313,6 +342,47 @@ describe("DbQueryPageViewsAnalytics", () => {
       expect(result.result.length).toBeGreaterThan(0);
       expect(result.result[0]).toHaveProperty("bounces");
       expect(result.result[0]).toHaveProperty("totaltime");
+    });
+
+    test("counts bounces per landing page and time until the next pageview", async () => {
+      const sessionD = Bun.randomUUIDv7();
+      const sessionE = Bun.randomUUIDv7();
+
+      // session D, one visit: p1 -> p2 (5 min later) -> p1 again (5 min later)
+      await insertAt({ session_id: sessionD, href: "https://example.com/p1", minutes: 0 });
+      await insertAt({ session_id: sessionD, href: "https://example.com/p2", minutes: 5 });
+      await insertAt({ session_id: sessionD, href: "https://example.com/p1", minutes: 10 });
+      // session E: bounce on p1
+      await insertAt({ session_id: sessionE, href: "https://example.com/p1", minutes: 0 });
+
+      const result = await analytics.getTopPagesExpanded({ site_id: siteId, from, to });
+
+      expect(result.status).toBe("success");
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      const page = (href: string) => result.result.find(({ name }) => name === href);
+
+      // Only session E bounced. Time: p1 -> p2 counts 5 min, last pages count nothing.
+      expect(page("https://example.com/p1")).toEqual({
+        name: "https://example.com/p1",
+        pageviews: 3,
+        visitors: 2,
+        visits: 2,
+        bounces: 1,
+        totaltime: 5 * 60_000,
+      });
+      // Viewed once in a multi-page visit: not a bounce.
+      expect(page("https://example.com/p2")).toEqual({
+        name: "https://example.com/p2",
+        pageviews: 1,
+        visitors: 1,
+        visits: 1,
+        bounces: 0,
+        totaltime: 5 * 60_000,
+      });
     });
   });
 
@@ -386,6 +456,45 @@ describe("DbQueryPageViewsAnalytics", () => {
 
       expect(result.result.length).toBeGreaterThan(0);
       expect(result.result[0]).toHaveProperty("totaltime");
+    });
+
+    test("counts bounces and time of the visits a referrer brought", async () => {
+      const sessionF = Bun.randomUUIDv7();
+      const sessionG = Bun.randomUUIDv7();
+      const referrer = "https://news.example.com";
+
+      // session F: lands from the referrer, then an internal pageview 3 min later
+      await insertAt({
+        session_id: sessionF,
+        href: "https://example.com/r1",
+        referrer,
+        minutes: 0,
+      });
+      await insertAt({ session_id: sessionF, href: "https://example.com/r2", minutes: 3 });
+      // session G: lands from the referrer and bounces
+      await insertAt({
+        session_id: sessionG,
+        href: "https://example.com/r1",
+        referrer,
+        minutes: 0,
+      });
+
+      const result = await analytics.getTopReferrersExpanded({ site_id: siteId, from, to });
+
+      expect(result.status).toBe("success");
+      if (result.status === "error") {
+        expect(true).toBeFalsy();
+        return;
+      }
+
+      expect(result.result.find(({ name }) => name === referrer)).toEqual({
+        name: referrer,
+        pageviews: 2,
+        visitors: 2,
+        visits: 2,
+        bounces: 1,
+        totaltime: 3 * 60_000,
+      });
     });
   });
 

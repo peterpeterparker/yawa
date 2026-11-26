@@ -18,7 +18,7 @@ import {
   StatsSchema,
   TitleSchema,
 } from "./schemas";
-import { MOBILE_OPERATING_SYSTEMS, VISITS_CTE } from "./_contants";
+import { MOBILE_OPERATING_SYSTEMS, VISIT_METRICS_CTE, VISITS_CTE } from "./_contants";
 
 export class DbPageViewsAnalytics {
   #connection: DbConnection;
@@ -126,6 +126,7 @@ export class DbPageViewsAnalytics {
    * Top pages with expanded engagement metrics: pageviews, visitors, visits,
    * bounces, and total time spent (in ms). Useful for identifying high-traffic
    * but low-engagement pages.
+   * Time excludes the last page of each visit.
    */
   async getTopPagesExpanded({
     site_id,
@@ -134,23 +135,16 @@ export class DbPageViewsAnalytics {
     limit = 100,
   }: QueryAnalyticsParamsWithLimit): Promise<Result<z.infer<typeof ListExpandedSchema>>> {
     return this.#connection.query({
-      sql: `${VISITS_CTE}
+      sql: `${VISIT_METRICS_CTE}
             SELECT
               href AS name,
-              SUM(t.c) AS pageviews,
-              COUNT(DISTINCT t.session_id) AS visitors,
-              COUNT(DISTINCT t.visit_key) AS visits,
-              SUM(CASE WHEN t.c = 1 THEN 1 ELSE 0 END) AS bounces,
-              SUM(epoch_ms(t.max_time) - epoch_ms(t.min_time)) AS totaltime
-            FROM (
-              SELECT href, session_id, visit_key,
-                     COUNT(*) AS c,
-                     MIN(created_at) AS min_time,
-                     MAX(created_at) AS max_time
-              FROM visit_page_views
-              GROUP BY href, session_id, visit_key
-            ) t
-            WHERE name != ''
+              COUNT(*) AS pageviews,
+              COUNT(DISTINCT session_id) AS visitors,
+              COUNT(DISTINCT visit_key) AS visits,
+              SUM(CASE WHEN visit_pageviews = 1 THEN 1 ELSE 0 END) AS bounces,
+              COALESCE(SUM(duration_ms), 0) AS totaltime
+            FROM visit_page_view_metrics
+            WHERE href != ''
             GROUP BY name
             ORDER BY visitors DESC, visits DESC
             LIMIT $limit`,
@@ -262,24 +256,16 @@ export class DbPageViewsAnalytics {
     limit = 100,
   }: QueryAnalyticsParamsWithLimit): Promise<Result<z.infer<typeof ListExpandedSchema>>> {
     return this.#connection.query({
-      sql: `${VISITS_CTE}
+      sql: `${VISIT_METRICS_CTE}
             SELECT
               referrer AS name,
-              SUM(t.c) AS pageviews,
-              COUNT(DISTINCT t.session_id) AS visitors,
-              COUNT(DISTINCT t.visit_key) AS visits,
-              SUM(CASE WHEN t.c = 1 THEN 1 ELSE 0 END) AS bounces,
-              SUM(epoch_ms(t.max_time) - epoch_ms(t.min_time)) AS totaltime
-            FROM (
-              SELECT referrer, session_id, visit_key,
-                     COUNT(*) AS c,
-                     MIN(created_at) AS min_time,
-                     MAX(created_at) AS max_time
-              FROM visit_page_views
-              WHERE referrer IS NOT NULL AND referrer != ''
-              GROUP BY referrer, session_id, visit_key
-            ) t
-            WHERE name != ''
+              COUNT(*) AS pageviews,
+              COUNT(DISTINCT session_id) AS visitors,
+              COUNT(DISTINCT visit_key) AS visits,
+              SUM(CASE WHEN visit_pageviews = 1 THEN 1 ELSE 0 END) AS bounces,
+              COALESCE(SUM(duration_ms), 0) AS totaltime
+            FROM visit_page_view_metrics
+            WHERE referrer IS NOT NULL AND referrer != ''
             GROUP BY name
             ORDER BY visitors DESC
             LIMIT $limit`,
@@ -333,10 +319,7 @@ export class DbPageViewsAnalytics {
   /**
    * Device type breakdown by unique visitors.
    * Identifies whether visitors use mobile, tablet, or desktop.
-   *
-   * ua-parser-js leaves the device type undefined for desktop browsers. A missing device type
-   * is therefore reported as "desktop" when a non-mobile operating system was detected.
-   * Page views with neither (typically crawlers) are excluded.
+   * A missing device type with a non-mobile OS counts as desktop (ua-parser-js sets none).
    */
   async getDevices({
     site_id,
