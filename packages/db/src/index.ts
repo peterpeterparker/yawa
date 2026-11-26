@@ -12,8 +12,10 @@ export * from "./queries/transactions/track-events";
 export * from "./queries/transactions/performance-metrics";
 export * from "./queries/analytics/page-views/analytics";
 export * from "./queries/analytics/page-views/schemas";
-export * from "./queries/analytics/track-events";
-export * from "./queries/analytics/performance-metrics";
+export * from "./queries/analytics/track-events/track-events";
+export * from "./queries/analytics/track-events/schemas";
+export * from "./queries/analytics/performance-metrics/performance-metrics";
+export * from "./queries/analytics/performance-metrics/schemas";
 export * from "./queries/analytics/types";
 
 // For test purposes ONLY!

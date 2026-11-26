@@ -1,23 +1,13 @@
-import type { DbConnection } from "../../db/connection";
+import type { DbConnection } from "../../../db/connection";
 import type { Result } from "yawa-common";
 import * as z from "zod";
-import { type QueryAnalyticsParams, type QueryAnalyticsParamsWithLimit } from "./types";
-
-const TopEventsSchema = z.strictObject({
-  name: z.string(),
-  count: z.coerce.number(),
-  visitors: z.coerce.number(),
-});
-
-export const ListTopEventsSchema = z.array(TopEventsSchema);
-
-const EventSeriesSchema = z.strictObject({
-  date: z.string(),
-  name: z.string(),
-  count: z.coerce.number(),
-});
-
-export const ListEventSeriesSchema = z.array(EventSeriesSchema);
+import { type QueryAnalyticsParams, type QueryAnalyticsParamsWithLimit } from "../types";
+import {
+  EventSeriesSchema,
+  type ListEventSeriesSchema,
+  type ListTopEventsSchema,
+  TopEventsSchema,
+} from "./schemas";
 
 export class DbTrackEventsAnalytics {
   #connection: DbConnection;

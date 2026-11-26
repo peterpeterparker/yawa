@@ -1,6 +1,6 @@
 import { beforeEach, afterEach, describe, expect, test } from "bun:test";
 import { __createDbInstanceForTest__, DbInstance, DbSites } from "yawa-db";
-import { DbPerformanceMetricsAnalytics } from "../../../src/queries/analytics/performance-metrics";
+import { DbPerformanceMetricsAnalytics } from "../../../src/queries/analytics/performance-metrics/performance-metrics";
 import { DbPerformanceMetrics } from "../../../src/queries/transactions/performance-metrics";
 
 describe("DbPerformanceMetricsAnalytics", () => {
