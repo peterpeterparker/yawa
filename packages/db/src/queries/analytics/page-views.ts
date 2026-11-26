@@ -62,6 +62,37 @@ const TitleSchema = z.strictObject({
 
 export const ListTitleSchema = z.array(TitleSchema);
 
+/**
+ * Inactivity gap after which a new visit starts for the same session.
+ */
+const VISIT_TIMEOUT = "INTERVAL 30 MINUTE";
+
+/**
+ * CTE exposing the page views of a site within a date range, each tagged with a `visit_key`.
+ *
+ * Visits are derived server-side from the daily `session_id` hash: a new visit starts on the
+ * first pageview of a session or after more than 30 minutes of inactivity. The `visit_id` sent
+ * by the tracker is ignored because it is regenerated on every full page load.
+ *
+ * Because `session_id` rotates daily, visits also end at midnight.
+ */
+const VISITS_CTE = `WITH flagged_page_views AS (
+    SELECT *,
+           CASE
+             WHEN created_at - LAG(created_at) OVER (PARTITION BY session_id ORDER BY created_at) <= ${VISIT_TIMEOUT}
+             THEN 0 ELSE 1
+           END AS new_visit
+    FROM yawa_analytics.page_views
+    WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
+  ),
+  visit_page_views AS (
+    SELECT *,
+           session_id::VARCHAR || ':' || CAST(SUM(new_visit) OVER (
+             PARTITION BY session_id ORDER BY created_at ROWS UNBOUNDED PRECEDING
+           ) AS VARCHAR) AS visit_key
+    FROM flagged_page_views
+  )`;
+
 export class DbPageViewsAnalytics {
   #connection: DbConnection;
 
@@ -75,8 +106,8 @@ export class DbPageViewsAnalytics {
 
   /**
    * Core summary metrics for a date range.
-   * Returns total pageviews, unique visitors (by session), unique visits (by visit),
-   * and bounce count (visits with only one pageview).
+   * Returns total pageviews, unique visitors (by session), visits (session activity
+   * split by 30 minutes of inactivity), and bounce count (visits with only one pageview).
    */
   async getStats({
     site_id,
@@ -84,16 +115,16 @@ export class DbPageViewsAnalytics {
     to,
   }: QueryAnalyticsParams): Promise<Result<z.infer<typeof OptionStatsSchema>>> {
     return this.#connection.queryOne({
-      sql: `SELECT
+      sql: `${VISITS_CTE}
+            SELECT
               COUNT(*) AS pageviews,
               COUNT(DISTINCT session_id) AS visitors,
-              COUNT(DISTINCT visit_id) AS visits,
+              COUNT(DISTINCT visit_key) AS visits,
               SUM(CASE WHEN visit_pageviews = 1 THEN 1 ELSE 0 END) AS bounces
             FROM (
-              SELECT session_id, visit_id,
-                     COUNT(*) OVER (PARTITION BY visit_id) AS visit_pageviews
-              FROM yawa_analytics.page_views
-              WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
+              SELECT session_id, visit_key,
+                     COUNT(*) OVER (PARTITION BY visit_key) AS visit_pageviews
+              FROM visit_page_views
             ) t`,
       schema: StatsSchema,
       values: { site_id, from, to },
@@ -176,21 +207,21 @@ export class DbPageViewsAnalytics {
     limit = 100,
   }: QueryAnalyticsParamsWithLimit): Promise<Result<z.infer<typeof ListExpandedSchema>>> {
     return this.#connection.query({
-      sql: `SELECT
+      sql: `${VISITS_CTE}
+            SELECT
               href AS name,
               SUM(t.c) AS pageviews,
               COUNT(DISTINCT t.session_id) AS visitors,
-              COUNT(DISTINCT t.visit_id) AS visits,
+              COUNT(DISTINCT t.visit_key) AS visits,
               SUM(CASE WHEN t.c = 1 THEN 1 ELSE 0 END) AS bounces,
               SUM(epoch_ms(t.max_time) - epoch_ms(t.min_time)) AS totaltime
             FROM (
-              SELECT href, session_id, visit_id,
+              SELECT href, session_id, visit_key,
                      COUNT(*) AS c,
                      MIN(created_at) AS min_time,
                      MAX(created_at) AS max_time
-              FROM yawa_analytics.page_views
-              WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
-              GROUP BY href, session_id, visit_id
+              FROM visit_page_views
+              GROUP BY href, session_id, visit_key
             ) t
             WHERE name != ''
             GROUP BY name
@@ -223,7 +254,7 @@ export class DbPageViewsAnalytics {
   }
 
   /**
-   * Most common first pages visited per session (landing pages).
+   * Most common first pages of visits (landing pages).
    * Identifies where visitors enter the site.
    */
   async getEntryPages({
@@ -233,12 +264,14 @@ export class DbPageViewsAnalytics {
     limit = 100,
   }: QueryAnalyticsParamsWithLimit): Promise<Result<z.infer<typeof ListMetricSchema>>> {
     return this.#connection.query({
-      sql: `SELECT
-              ARGMIN(href, created_at) AS name,
-              COUNT(DISTINCT session_id) AS visitors
-            FROM yawa_analytics.page_views
-            WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
-            GROUP BY visit_id
+      sql: `${VISITS_CTE}
+            SELECT name, COUNT(DISTINCT session_id) AS visitors
+            FROM (
+              SELECT ARGMIN(href, created_at) AS name, ANY_VALUE(session_id) AS session_id
+              FROM visit_page_views
+              GROUP BY visit_key
+            ) t
+            GROUP BY name
             ORDER BY visitors DESC LIMIT $limit`,
       schema: MetricSchema,
       values: { site_id, from, to, limit },
@@ -246,7 +279,7 @@ export class DbPageViewsAnalytics {
   }
 
   /**
-   * Most common last pages visited per session (exit pages).
+   * Most common last pages of visits (exit pages).
    * Identifies where visitors leave the site.
    */
   async getExitPages({
@@ -256,12 +289,14 @@ export class DbPageViewsAnalytics {
     limit = 100,
   }: QueryAnalyticsParamsWithLimit): Promise<Result<z.infer<typeof ListMetricSchema>>> {
     return this.#connection.query({
-      sql: `SELECT
-              ARGMAX(href, created_at) AS name,
-              COUNT(DISTINCT session_id) AS visitors
-            FROM yawa_analytics.page_views
-            WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
-            GROUP BY visit_id
+      sql: `${VISITS_CTE}
+            SELECT name, COUNT(DISTINCT session_id) AS visitors
+            FROM (
+              SELECT ARGMAX(href, created_at) AS name, ANY_VALUE(session_id) AS session_id
+              FROM visit_page_views
+              GROUP BY visit_key
+            ) t
+            GROUP BY name
             ORDER BY visitors DESC LIMIT $limit`,
       schema: MetricSchema,
       values: { site_id, from, to, limit },
@@ -300,22 +335,22 @@ export class DbPageViewsAnalytics {
     limit = 100,
   }: QueryAnalyticsParamsWithLimit): Promise<Result<z.infer<typeof ListExpandedSchema>>> {
     return this.#connection.query({
-      sql: `SELECT
+      sql: `${VISITS_CTE}
+            SELECT
               referrer AS name,
               SUM(t.c) AS pageviews,
               COUNT(DISTINCT t.session_id) AS visitors,
-              COUNT(DISTINCT t.visit_id) AS visits,
+              COUNT(DISTINCT t.visit_key) AS visits,
               SUM(CASE WHEN t.c = 1 THEN 1 ELSE 0 END) AS bounces,
               SUM(epoch_ms(t.max_time) - epoch_ms(t.min_time)) AS totaltime
             FROM (
-              SELECT referrer, session_id, visit_id,
+              SELECT referrer, session_id, visit_key,
                      COUNT(*) AS c,
                      MIN(created_at) AS min_time,
                      MAX(created_at) AS max_time
-              FROM yawa_analytics.page_views
-              WHERE site_id = $site_id AND created_at BETWEEN $from AND $to
-                AND referrer IS NOT NULL AND referrer != ''
-              GROUP BY referrer, session_id, visit_id
+              FROM visit_page_views
+              WHERE referrer IS NOT NULL AND referrer != ''
+              GROUP BY referrer, session_id, visit_key
             ) t
             WHERE name != ''
             GROUP BY name
