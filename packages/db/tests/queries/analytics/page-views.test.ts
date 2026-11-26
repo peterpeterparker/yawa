@@ -1,5 +1,11 @@
 import { beforeEach, afterEach, describe, expect, test } from "bun:test";
-import { __createDbInstanceForTest__, DbInstance, DbPageViews, DbSites } from "../../../src";
+import {
+  __createDbInstanceForTest__,
+  type DbConnection,
+  DbInstance,
+  DbPageViews,
+  DbSites,
+} from "../../../src";
 import { DbPageViewsAnalytics } from "../../../src/queries/analytics/page-views";
 
 const pageView = (
@@ -50,6 +56,7 @@ describe("DbQueryPageViewsAnalytics", () => {
   let instance: DbInstance;
   let analytics: DbPageViewsAnalytics;
   let siteId: string;
+  let connection: DbConnection;
 
   const from = "2026-01-01 00:00:00";
   const to = "2026-12-31 23:59:59";
@@ -63,7 +70,7 @@ describe("DbQueryPageViewsAnalytics", () => {
       return;
     }
 
-    const { result: connection } = connectionResult;
+    connection = connectionResult.result;
 
     const siteResult = await DbSites.create({ connection }).insert({
       hostname: "example.com",
@@ -141,6 +148,93 @@ describe("DbQueryPageViewsAnalytics", () => {
       expect(result.result?.visitors).toBe(2);
       expect(result.result?.visits).toBe(2);
       expect(result.result?.bounces).toBe(1);
+    });
+
+    describe("visits derived from session and inactivity", () => {
+      const sessionC = Bun.randomUUIDv7();
+
+      // Mimics the tracker on a multi-page site: a new visit_id on every full page load.
+      const insertSessionC = async (hrefs: string[]) => {
+        const pageViews = DbPageViews.create({ connection });
+        for (const href of hrefs) {
+          await pageViews.insert(pageView(siteId, { session_id: sessionC, href }));
+        }
+      };
+
+      const shiftSessionC = async ({ href, minutes }: { href: string; minutes: number }) => {
+        const result = await connection.run({
+          sql: `UPDATE yawa_analytics.page_views
+                SET created_at = created_at + to_minutes(CAST($minutes AS BIGINT))
+                WHERE session_id = $session_id AND href = $href`,
+          values: { session_id: sessionC, href, minutes },
+        });
+        expect(result.status).toBe("success");
+      };
+
+      test("groups pageviews of a session into one visit despite different visit_ids", async () => {
+        await insertSessionC(["https://example.com/c1", "https://example.com/c2"]);
+        await shiftSessionC({ href: "https://example.com/c2", minutes: 10 });
+
+        const result = await analytics.getStats({ site_id: siteId, from, to });
+
+        expect(result.status).toBe("success");
+        if (result.status === "error") {
+          expect(true).toBeFalsy();
+          return;
+        }
+
+        expect(result.result?.pageviews).toBe(5);
+        expect(result.result?.visitors).toBe(3);
+        expect(result.result?.visits).toBe(3);
+        expect(result.result?.bounces).toBe(1);
+      });
+
+      test("starts a new visit after more than 30 minutes of inactivity", async () => {
+        await insertSessionC([
+          "https://example.com/c1",
+          "https://example.com/c2",
+          "https://example.com/c3",
+        ]);
+        await shiftSessionC({ href: "https://example.com/c2", minutes: 20 });
+        await shiftSessionC({ href: "https://example.com/c3", minutes: 60 });
+
+        const result = await analytics.getStats({ site_id: siteId, from, to });
+
+        expect(result.status).toBe("success");
+        if (result.status === "error") {
+          expect(true).toBeFalsy();
+          return;
+        }
+
+        // session C: visit c1 -> c2, then 40 minutes later a new visit c3 (bounce)
+        expect(result.result?.pageviews).toBe(6);
+        expect(result.result?.visitors).toBe(3);
+        expect(result.result?.visits).toBe(4);
+        expect(result.result?.bounces).toBe(2);
+
+        const entries = await analytics.getEntryPages({ site_id: siteId, from, to });
+        const exits = await analytics.getExitPages({ site_id: siteId, from, to });
+
+        if (entries.status === "error" || exits.status === "error") {
+          expect(true).toBeFalsy();
+          return;
+        }
+
+        const names = (rows: { name: string }[]) => rows.map(({ name }) => name).sort();
+
+        expect(names(entries.result)).toEqual([
+          "https://example.com/",
+          "https://example.com/blog",
+          "https://example.com/c1",
+          "https://example.com/c3",
+        ]);
+        expect(names(exits.result)).toEqual([
+          "https://example.com/about",
+          "https://example.com/blog",
+          "https://example.com/c2",
+          "https://example.com/c3",
+        ]);
+      });
     });
   });
 
